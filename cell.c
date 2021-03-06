@@ -15,11 +15,11 @@ void mx_init(Matrix *mx) // inicjalizuje macierz, na białą planszę martwych k
 	{
 		for (int j = 0; j < mx->c; j++)
 		{
-			(dmx + i * col + j)->type = CH 0;
+			(dmx + i * col + j)->type = CH 0x00;
 			(dmx + i * col + j)->R = CH 0xFF;
 			(dmx + i * col + j)->G = CH 0xFF;
 			(dmx + i * col + j)->B = CH 0xFF;
-			(dmx + i * col + j)->neighbor = CH 0;
+			(dmx + i * col + j)->neighbor = CH 0x00;
 		}
 	}
 	mx->data = dmx;
