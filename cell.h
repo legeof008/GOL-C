@@ -3,9 +3,9 @@
 
 typedef struct{
 	char type; // 0 - martwa; 1 - żywa; 2 - ściana;
-	char R;
-	char G;
-	char B;
+	signed char R;
+	signed char G;
+	signed char B;
 	char neighbor; // miedzy 0 a 8 sąsiadów
 }Cell;
 

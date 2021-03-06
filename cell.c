@@ -1,9 +1,11 @@
 ﻿#include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <string.h>
 #include "cell.h"
 
 #define CH (char) // nie chce mi sie pisac
+#define COL "\x1b[38;2;"
 
 void mx_init(Matrix *mx) // inicjalizuje macierz, na białą planszę martwych komórek,
 {
@@ -14,9 +16,9 @@ void mx_init(Matrix *mx) // inicjalizuje macierz, na białą planszę martwych k
 		for (int j = 0; j < mx->c; j++)
 		{
 			(dmx + i * col + j)->type = CH 0;
-			(dmx + i * col + j)->R = CH 255;
-			(dmx + i * col + j)->G = CH 255;
-			(dmx + i * col + j)->B = CH 255;
+			(dmx + i * col + j)->R = CH 0xFF;
+			(dmx + i * col + j)->G = CH 0xFF;
+			(dmx + i * col + j)->B = CH 0xFF;
 			(dmx + i * col + j)->neighbor = CH 0;
 		}
 	}
@@ -74,6 +76,25 @@ Matrix *mx_read_from_file(char *filename) // Czyta z pliku
 	return A;
 }
 
+char *mx_get_col(Cell *dna)
+{
+
+	char *colbash = malloc(23 * sizeof(char));
+	strcpy(colbash, COL);
+	char *result = malloc(3 * sizeof(char));
+	sprintf(result, "%d", ((dna)->G + 256));
+	strcat(colbash, result);
+	strcat(colbash, ";");
+	sprintf(result, "%d", ((dna)->G + 256));
+	strcat(colbash, result);
+	strcat(colbash, ";");
+	sprintf(result, "%d", ((dna)->B + 256));
+	strcat(colbash, result);
+	strcat(colbash, "m");
+
+	return colbash;
+}
+
 void mx_print(Matrix *mx) // wypisuje jak macierz poglądowo
 {
 	Cell *dmx = mx->data;
@@ -81,7 +102,7 @@ void mx_print(Matrix *mx) // wypisuje jak macierz poglądowo
 	{
 		for (int j = 0; j < mx->c; j++)
 		{
-			printf("%d ", (dmx + i * mx->c + j)->type);
+			printf("%s%d ", mx_get_col(dmx + i * mx->c + j), (dmx + i * mx->c + j)->type);
 		}
 		printf("\n");
 	}
@@ -108,4 +129,14 @@ char mx_get_single_val(Matrix *mx, int r, int c, char type) // wydobycie pojedyn
 		return 'x';
 		break;
 	}
+}
+//char mx_print_rgb(Matrix* mx )
+int main(int argc, char **argv)
+{
+
+	Matrix *mxt = mx_read_from_file(argv[1]);
+	mx_print(mxt);
+	Cell *dna = mxt->data;
+
+	return 0;
 }
