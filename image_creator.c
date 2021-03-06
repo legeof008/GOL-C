@@ -13,7 +13,7 @@ void write_file_header_to_bitmap(FILE* image, int imageWidth, int imageHeight)
     b = imageWidth * imageHeight * 3 + (imageWidth % 4) * imageHeight + 54;
     fwrite(&b, 4, 1, image);    // Wielkosc calego pliku
     b = 0;
-    fwrite(&b, 4, 1, image);    // TODO: Opisac
+    fwrite(&b, 4, 1, image);    // Bity w rezerwie
     b = 54;
     fwrite(&b, 4, 1, image);    // Offset listy pixeli
 }
@@ -27,7 +27,7 @@ void write_info_header_to_bitmap(FILE* image, int imageWidth, int imageHeight)
     b = imageHeight;
     fwrite(&b, 4, 1, image);    // Wysokosc obrazu
     b = 1;
-    fwrite(&b, 2, 1, image);    // TODO: Opisac
+    fwrite(&b, 2, 1, image);    // Numer płaszczyzny obrazu, dla bmp MUSI BYĆ 1 koniecznie 
     b = 24;
     fwrite(&b, 2, 1, image);    // Ilosc bitow na 1 piksel (24->3*1B (B, G, R))
     b = 0;
