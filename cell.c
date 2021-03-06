@@ -4,6 +4,7 @@
 #include <string.h>
 #include "cell.h"
 
+
 #define CH (char) // nie chce mi sie pisac
 #define COL "\x1b[38;2;"
 
@@ -125,18 +126,27 @@ char mx_get_single_val(Matrix *mx, int r, int c, char type) // wydobycie pojedyn
 		return ret;
 		break;
 
+	case 'r':	// czerwony kolor
+		return (dmx + r * mx->c + c)->R;
+
+	case 'g':	// zielony kolor
+		return (dmx + r * mx->c + c)->G;
+
+	case 'b':	// niebieski kolor
+		return (dmx + r * mx->c + c)->B;
+
 	default: // dla dobrej miary do debugowania
 		return 'x';
 		break;
 	}
 }
+
 //char mx_print_rgb(Matrix* mx )
+
 int main(int argc, char **argv)
 {
-
-	Matrix *mxt = mx_read_from_file(argv[1]);
+	Matrix *mxt = mx_read_from_file(argv[0]);
 	mx_print(mxt);
-	Cell *dna = mxt->data;
 
 	return 0;
 }
