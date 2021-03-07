@@ -8,8 +8,8 @@ if (row == 0) {
 if (column == 0) {
 	(dmx + row * mx->c + column + 1)->neighbor++;
 	(dmx + row + 1 * mx->c + column)->neighbor++;
-	if (neighbourType == 2) {			//przek¹tna dla trybu 8 s¹siadow
-		(dmx + row + 1 * mx->c + column + 1)->neighbor++;		//przêk¹tna prawo góra
+	if (neighbourType == 2) {			//przekï¿½tna dla trybu 8 sï¿½siadow
+		(dmx + row + 1 * mx->c + column + 1)->neighbor++;		//przï¿½kï¿½tna prawo gï¿½ra
 	}
 }
 if (column > 0 && column < maxColumn) {
@@ -41,8 +41,8 @@ if (row != 0 && row != maxRow) {
 		else {
 			(dmx + row * mx->c + column + 1)->neighbor++;
 		}
-		(dmx + row + 1 * mx->c + column)->neighbor++;			//góra œrodek
-		(dmx + row - 1 * mx->c + column)->neighbor++;			//dó³ œrodek
+		(dmx + row + 1 * mx->c + column)->neighbor++;			//gï¿½ra ï¿½rodek
+		(dmx + row - 1 * mx->c + column)->neighbor++;			//dï¿½ ï¿½rodek
 	}
 	if (column > 0 && column < maxColumn) {
 		if (neighbourType == 2) {
@@ -51,10 +51,10 @@ if (row != 0 && row != maxRow) {
 				(dmx + i * mx->c + column + 1)->neighbor++;			//prwao blok
 			}
 		}
-		(dmx + row * mx->c + column + 1)->neighbor++;			//prawo œrodek
-		(dmx + row * mx->c + column - 1)->neighbor++;			//lewo œrodek
-		(dmx + row + 1 * mx->c + column)->neighbor++;			//góra œrodek
-		(dmx + row - 1 * mx->c + column)->neighbor++;			//dó³ œrodek
+		(dmx + row * mx->c + column + 1)->neighbor++;			//prawo ï¿½rodek
+		(dmx + row * mx->c + column - 1)->neighbor++;			//lewo ï¿½rodek
+		(dmx + row + 1 * mx->c + column)->neighbor++;			//gï¿½ra ï¿½rodek
+		(dmx + row - 1 * mx->c + column)->neighbor++;			//dï¿½ ï¿½rodek
 	}
 	if (column == maxColumn) {
 		if (neighbourType == 2) {
@@ -63,8 +63,8 @@ if (row != 0 && row != maxRow) {
 			}
 		}
 		(dmx + row * mx->c + column - 1)->neighbor++;
-		(dmx + row + 1 * mx->c + column)->neighbor++;			//góra œrodek
-		(dmx + row - 1 * mx->c + column)->neighbor++;			//dó³ œrodek
+		(dmx + row + 1 * mx->c + column)->neighbor++;			//gï¿½ra ï¿½rodek
+		(dmx + row - 1 * mx->c + column)->neighbor++;			//dï¿½ ï¿½rodek
 	}
 }
 if (row == maxRow) {
@@ -103,7 +103,7 @@ void make_a_cycle_rewrite_struct(Matrix* mx, Matrix* nx, int maxRow, int maxColu
 	int j;
 	for (i = 0; i < maxRow;i++) {
 		for (j = 0; j < maxColumn;j++){
-			if (dmx + i * mx->c + j)->type == 2)		//przepisywanie œcian
+			if (dmx + i * mx->c + j)->type == 2)		//przepisywanie ï¿½cian
 				dmc + i * mc->c + j)->type = 2;
 			if (dmx + i * mx->c + j)->type == 1 ){
 				if (dmx + i * mx->c + j)->neigbor == 2 || dmx + i * mx->c + j)->neigbor == 3){		//przepisuje punkt zywy do nowej strukturze
