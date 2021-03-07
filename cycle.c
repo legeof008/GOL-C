@@ -103,17 +103,17 @@ void make_a_cycle_rewrite_struct(Matrix* mx, Matrix* nx, int maxRow, int maxColu
 	int j;
 	for (i = 0; i < maxRow;i++) {
 		for (j = 0; j < maxColumn;j++){
-			if (dmx + i * mx->c + j)->type == 2)		//przepisywanie �cian
-				dmc + i * mc->c + j)->type = 2;
-			if (dmx + i * mx->c + j)->type == 1 ){
-				if (dmx + i * mx->c + j)->neigbor == 2 || dmx + i * mx->c + j)->neigbor == 3){		//przepisuje punkt zywy do nowej strukturze
-					dmc + i * mc->c + j)->type = 1;
-					add_neighbourhood_parametr(Matrix* cx, maxRaw, maxColumn, neighbourType, i, j);		//dodaje parametr sasiad
+			if ((dmx + i * mx->c + j)->type == 2)		//przepisywanie �cian
+				(dmc + i * mx->c + j)->type = 2;
+			if ((dmx + i * mx->c + j)->type == 1 ){
+				if ((dmx + i * mx->c + j)->neighbor == 2 || (dmx + i * mx->c + j)->neighbor == 3){		//przepisuje punkt zywy do nowej strukturze
+					(dmc + i * nx->c + j)->type = 1;
+					add_neighbourhood_parametr(nx, maxRow, maxColumn, neighbourType, i, j);		//dodaje parametr sasiad
 					}
 				}
-				if (dmx + i * mx->c + j)->type == 0 && dmx + i * mx->c + j)->neigbor == 3){
-					dmc + i * mc->c + j)->type = 1;
-					add_neighbourhood_parametr(Matrix * cx, maxRaw, maxColumn, neighbourType, i, j);
+				if ((dmx + i * mx->c + j)->type == 0 && (dmx + i * mx->c + j)->neighbor == 3){
+					(dmc + i * nx->c + j)->type = 1;
+					add_neighbourhood_parametr(nx, maxRow, maxColumn, neighbourType, i, j);
 				};
 		}
 	}
