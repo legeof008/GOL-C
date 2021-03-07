@@ -3,7 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// TODO: Lepsze zapisywanie naglowkow do pliku (moze bez zmiennej b; usunac niepotrzebne przypisania wartosci b)
+#define MAX_SCALE 10
+#define WALL_COLOR 0x0000FF // Niebieski
+#define DEAD_COLOR 0x000000 // Czarny
+
 void write_file_header_to_bitmap(FILE* image, int imageWidth, int imageHeight)
 {
     int b = 'B';
@@ -13,7 +16,7 @@ void write_file_header_to_bitmap(FILE* image, int imageWidth, int imageHeight)
     b = imageWidth * imageHeight * 3 + (imageWidth % 4) * imageHeight + 54;
     fwrite(&b, 4, 1, image);    // Wielkosc calego pliku
     b = 0;
-    fwrite(&b, 4, 1, image);    // TODO: Opisac
+    fwrite(&b, 4, 1, image);    // Nie jest wazne -> powinno byc 0
     b = 54;
     fwrite(&b, 4, 1, image);    // Offset listy pixeli
 }
@@ -27,60 +30,85 @@ void write_info_header_to_bitmap(FILE* image, int imageWidth, int imageHeight)
     b = imageHeight;
     fwrite(&b, 4, 1, image);    // Wysokosc obrazu
     b = 1;
-    fwrite(&b, 2, 1, image);    // TODO: Opisac
+    fwrite(&b, 2, 1, image);    // Liczba plaszczyzn (powinno byc 1)
     b = 24;
     fwrite(&b, 2, 1, image);    // Ilosc bitow na 1 piksel (24->3*1B (B, G, R))
     b = 0;
     fwrite(&b, 4, 1, image);    // Rodzaj kompresji
     b = 0;
     fwrite(&b, 4, 1, image);    // Wielkosc obrazu po kompresji (gdy rodzaj kompresji jest 0, to powinno byc 0)
-    b = imageWidth * imageHeight * 3 + (imageWidth % 4) * imageHeight;
+    b = 0;
     fwrite(&b, 4, 1, image);    // Pozioma rozdzielczosc piksele/metr (nie jest wazne -> powinno byc 0)
     b = 0;
     fwrite(&b, 4, 1, image);    // Pionowa rozdzielczosc piksele/metr (nie jest wazne -> powinno byc 0)
     b = 0;
     fwrite(&b, 4, 1, image);    // Liczba uzytych kolorow w palecie(nie jest wazne -> powinno byc 0)
     b = 0;
-    fwrite(&b, 4, 1, image);    // TODO: Opisac
+    fwrite(&b, 4, 1, image);    // Liczba "waznych" kolorow (nie jest wazne -> powinno byc 0)
 }
 
-// TODO: Zwracanie true/false -> udalo sie zapisac / nie udalo sie
-// TODO: Skala obrazu??
-// TODO: Obrot obrazu -> na razie obraz jest obrocony
-void save_as_bitmap(char* path, Matrix *matrix)
+int save_as_bitmap(char* path, Matrix *matrix, int scale)
 {
-    FILE* image = fopen(path, "wb");
+    if (scale >= MAX_SCALE || scale < 1)
+    {
+        fprintf(stderr, "Nie mozna utworzyc obrazu (podana skala jest zla. Powinna miescic sie w (1, %d))", MAX_SCALE);
+        return -1;
+    }
 
-    //TODO: Sprawdzanie, czy sciezka istnieje i tworzenie sciezki
+    FILE* image = fopen(path, "wb");
 
     if (image == NULL)
     {
         fprintf(stderr, "Nie mozna utworzyc obrazu (problem ze sciezka)");
-        return;
+        return -1;
     }
 
-    write_file_header_to_bitmap(image, matrix->c, matrix->r);
-    write_info_header_to_bitmap(image, matrix->c, matrix->r);
+    int sw = scale * matrix->c;
+    int sh = scale * matrix->r;
+
+    write_file_header_to_bitmap(image, sw, sh);
+    write_info_header_to_bitmap(image, sw, sh);
 
     int b = 0;  // Buffer do zapisywania za pomoca fwrite
     // Zapisywanie kolorow pikseli
-    for (int i = 0; i < matrix->r; i++)
+    for (int i = matrix->r - 1; i >= 0; i--)    // Kolumny
     {
-        for (int j = 0; j < matrix->c; j++)
+        for (int si = 0; si < scale; si++)
         {
-            b = mx_get_single_val(matrix, i, j, 'b');
-            fwrite(&b, 1, 1, image);        // Blue
-            b = mx_get_single_val(matrix, i, j, 'g');
-            fwrite(&b, 1, 1, image);        // Green
-            b = mx_get_single_val(matrix, i, j, 'r');
-            fwrite(&b, 1, 1, image);        // Red
+            for (int j = 0; j < matrix->c; j++)    // Wiersze
+            {
+                for (int sj = 0; sj < scale; sj++)
+                {
+                    if (mx_get_single_val(matrix, i, j, 't') == 0)  // Martwa komorka
+                    {
+                        b = DEAD_COLOR;
+                        fwrite(&b, 3, 1, image);
+                    }
+                    else if (mx_get_single_val(matrix, i, j, 't') == 2) // Sciana
+                    {
+                        b = WALL_COLOR;
+                        fwrite(&b, 3, 1, image);
+                    }
+                    else
+                    {
+                        b = mx_get_single_val(matrix, i, j, 'b');
+                        fwrite(&b, 1, 1, image);        // Blue
+                        b = mx_get_single_val(matrix, i, j, 'g');
+                        fwrite(&b, 1, 1, image);        // Green
+                        b = mx_get_single_val(matrix, i, j, 'r');
+                        fwrite(&b, 1, 1, image);        // Red
+                    }
+                }
+            }
+            // Dopisywanie kilku 0 do konca wiersza
+            b = 0;
+            fwrite(&b, 1, sw % 4, image);
         }
-        // Dopisywanie kilku 0 do konca wiersza
-        b = 0;
-        fwrite(&b, 1, matrix->c % 4, image);
     }
 
     fclose(image);
+
+    return 0;
 }
 
 void read_bitmap(char* bitmapPath, char* outputPath)
