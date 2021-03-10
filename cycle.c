@@ -1,7 +1,10 @@
 #include "cycle.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>	// TODO: srand powinien byc w mainie
 #include "cell.h"
+
 
 void add_neighbourhood_parametr(Matrix* mx, int maxRow, int maxColumn, char neighbourType, int row, int column) {
 	Cell* dmx = mx->data;
@@ -120,6 +123,67 @@ void make_a_cycle_rewrite_struct(Matrix* mx, Matrix* nx, int maxRow, int maxColu
 	}
 }
 
+// Sumuje 2 uchary i ogranicza wartosc sumy do 255
+unsigned char add_clamped(unsigned char f, unsigned char s)
+{
+	if (f + s > 255)
+		return 255;
+	else
+		return f + s;
+}
+
+// Zwraca komorke z polaczonym kolorem z 2 rodzicow
+Cell combine_colors(Cell first, Cell second)
+{
+	srand(time(NULL));	// TODO: srand powinien byc w mainie
+
+	// Wybieranie glownego rodzica
+	int p = rand() % 2;		// 0 -> 1 jest glowny; 1 -> 2 jest glowny
+
+	Cell mainParent = p ? first : second;
+	Cell secondParent = p ? second : first;
+
+	Cell newCell =
+	{
+		.type = 1,
+		.R = 0,
+		.G = 0,
+		.B = 0,
+		.neighbor = 0
+	};
+
+	// Losowanie numerow bitow, ktore zostana dodane
+	char bitNumbers[3];
+
+	bitNumbers[0] = rand() % 24;
+	do
+	{
+		bitNumbers[1] = rand() % 24;
+	} while (bitNumbers[1] == bitNumbers[0]);
+	do
+	{
+		bitNumbers[2] = rand() % 24;
+	} while (bitNumbers[2] == bitNumbers[0] || bitNumbers[2] == bitNumbers[1]);
+
+	// Tworzenie kolorow z wylosowanych numerow bitow
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (bitNumbers[i] < 8)
+			newCell.B += (1 << bitNumbers[i]) & secondParent.B;
+		else if (bitNumbers[i] < 16)
+			newCell.G += (1 << (bitNumbers[i] % 8)) & secondParent.G;
+		else
+			newCell.R += (1 << (bitNumbers[i] % 8)) & secondParent.R;
+	}
+
+	// Dodawanie kolorow glownego rodzica
+	newCell.R = add_clamped(mainParent.R, newCell.R);
+	newCell.G = add_clamped(mainParent.G, newCell.G);
+	newCell.B = add_clamped(mainParent.B, newCell.B);
+
+	return newCell;
+}
 
 
 
