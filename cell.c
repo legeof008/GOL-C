@@ -6,10 +6,10 @@
 
 #define CH (char) // nie chce mi sie pisac
 
-void mx_init(Matrix *mx) // inicjalizuje macierz, na białą planszę martwych komórek,
+void mx_init(Matrix * mx) // inicjalizuje macierz, na białą planszę martwych komórek,
 {
 	int col = mx->c;
-	Cell *dmx = (Cell *)malloc(mx->r * col * sizeof(Cell));
+	Cell* dmx = (Cell*)malloc(mx->r * col * sizeof(Cell));
 	for (int i = 0; i < mx->r; i++)
 	{
 		for (int j = 0; j < mx->c; j++)
@@ -24,9 +24,9 @@ void mx_init(Matrix *mx) // inicjalizuje macierz, na białą planszę martwych k
 	mx->data = dmx;
 }
 
-int mx_put_val(Matrix *mx, int r, int c, int num, ...) /* wieloargumentowa funkcja, NIE dawać więcej niż 3 argumenty po num*/
+int mx_put_val(Matrix* mx, int r, int c, int num, ...) /* wieloargumentowa funkcja, NIE dawać więcej niż 3 argumenty po num*/
 {
-	Cell *dmx = mx->data;
+	Cell* dmx = mx->data;
 	va_list ap;
 	va_start(ap, num);
 	if (num == 1) // num = 1 zmiana typu komórki
@@ -51,16 +51,16 @@ int mx_put_val(Matrix *mx, int r, int c, int num, ...) /* wieloargumentowa funkc
 		return 0;
 }
 
-Matrix *mx_alloc(int r, int c) // alokuje pamięć na Matrix
+Matrix* mx_alloc(int r, int c) // alokuje pamięć na Matrix
 {
-	Matrix *A = (Matrix *)malloc(sizeof(Matrix));
+	Matrix* A = (Matrix*)malloc(sizeof(Matrix));
 	A->c = c;
 	A->r = r;
 	mx_init(A);
 	return A;
 }
 
-Matrix *mx_read_from_file(char *filename) // Czyta z pliku
+Matrix* mx_read_from_file(char* filename) // Czyta z pliku
 {
 	int x, y, type, R, G, B;
 	FILE *f = fopen(filename, "r");
@@ -74,15 +74,15 @@ Matrix *mx_read_from_file(char *filename) // Czyta z pliku
 	mx_init(A);
 	while (fscanf(f, "%d %d %d %d %d %d", &x, &y, &type, &R, &G, &B) == 6)
 	{
-		mx_put_val(A, x, y, 1, CH type);
-		mx_put_val(A, x, y, 3, CH R, CH G, CH B);
+		mx_put_val(A, y, x, 1, CH type);
+		mx_put_val(A, y, x, 3, CH R, CH G, CH B);
 	}
 	return A;
 }
 
 void mx_print(Matrix *mx) // wypisuje jak macierz poglądowo
 {
-	Cell *dmx = mx->data;
+	Cell* dmx = mx->data;
 	for (int i = 0; i < mx->r; i++)
 	{
 		for (int j = 0; j < mx->c; j++)
@@ -100,7 +100,7 @@ Cell *mx_get_cell(Matrix *mx, int r, int c)
 }
 char mx_get_single_val(Matrix *mx, int r, int c, char type) // wydobycie pojedynczej cechy komórki, t- type, n - sąsiad
 {
-	Cell *dmx = mx->data;
+	Cell* dmx = mx->data;
 	char ret;
 	switch (type)
 	{
