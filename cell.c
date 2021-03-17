@@ -66,7 +66,7 @@ Matrix* mx_read_from_file(FILE *f) // Czyta z pliku
 
 	if (f == NULL)
 	{
-		fprintf(stderr, "Error opening file: %s\n", filename);
+		fprintf(stderr, "Error opening file\n");
 		return NULL;
 	}
 	Matrix *A = (Matrix *)malloc(sizeof(Matrix));
