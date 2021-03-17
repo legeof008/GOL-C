@@ -2,7 +2,6 @@
 #define _CELL_MX_H_
 
 #pragma pack(push, 1)
-
 typedef struct{
 	char type; // 0 - martwa; 1 - żywa; 2 - ściana;
 	unsigned char R;
