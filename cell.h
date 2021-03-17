@@ -31,3 +31,4 @@ char mx_get_single_val(Matrix *mx, int r, int c, char type); // wydobycie pojedy
 int mx_put_val(Matrix *mx, int r, int c, int num, ...); /* wieloargumentowa funkcja, NIE dawać więcej niż 3 argumenty po num*/
 
 #endif
+

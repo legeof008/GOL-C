@@ -1,10 +1,10 @@
-#ifndef CYCLE_H
-#define CYCLE_h
+#ifndef _CYCLE_H_
+#define _CYCLE_H_
+
 #include "cell.h"
-#include <stdio.h>
 
-void make_a_cycle_rewrite_struct(Matrix *matrix, Matrix *matrix, int maxRow, int maxColumn, char neighbourType);
+void add_neighbourhood_parametr(Matrix* mx, int maxRow, int maxColumn, char neighbourType, int row, int column, char connection);
 
-void add_neighbourhood_parametr(Matrix* mx, int maxRow, int maxColumn, char neighbourType, int row, int column);
+void make_a_cycle_rewrite_struct(Matrix* mx, Matrix* nx, int maxRow, int maxColumn, char neighbourType);
 
-#endif
+#endif // _CYCLE_H_
