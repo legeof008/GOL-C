@@ -1,13 +1,18 @@
 #ifndef _CELL_MX_H_
 #define _CELL_MX_H_
 
+#pragma pack(push, 1)
+
 typedef struct{
 	char type; // 0 - martwa; 1 - żywa; 2 - ściana;
 	unsigned char R;
 	unsigned char G;
 	unsigned char B;
 	char neighbor; // miedzy 0 a 8 sąsiadów
+	char padding [3];
 }Cell;
+#pragma pack(pop)
+
 
 typedef struct {
 	
@@ -20,7 +25,7 @@ typedef struct {
 
 Matrix *mx_alloc(int r, int c); // alokuje pamięć na Matrix
 
-Matrix *mx_read_from_file(char *filename); // Czyta z pliku
+Matrix* mx_read_from_file(FILE *f) ; // Czyta z pliku
 
 Cell *mx_get_cell(Matrix *mx, int r, int c); 
 
