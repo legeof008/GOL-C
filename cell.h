@@ -12,15 +12,16 @@ typedef struct{
 }Cell;
 #pragma pack(pop)
 
-
+#pragma pack(push, 1)
 typedef struct {
 	
 	Cell* data;
 	int r,c; // wiersze, kolumny
 	char nei,fol; // n - sąsiedztwo, f - zwijanie
-	
+	char padding [2];
 	
 }Matrix;
+#pragma pack(pop)
 
 Matrix *mx_alloc(int r, int c); // alokuje pamięć na Matrix
 
