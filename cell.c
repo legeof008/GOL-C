@@ -60,10 +60,10 @@ Matrix* mx_alloc(int r, int c) // alokuje pamięć na Matrix
 	return A;
 }
 
-Matrix* mx_read_from_file(char* filename) // Czyta z pliku
+Matrix* mx_read_from_file(FILE *f) // Czyta z pliku
 {
 	int x, y, type, R, G, B;
-	FILE *f = fopen(filename, "r");
+
 	if (f == NULL)
 	{
 		fprintf(stderr, "Error opening file: %s\n", filename);
@@ -154,7 +154,8 @@ void mx_cpy(Matrix *src, Matrix *dest) //Kopiowanie macierzy z zerowaniem src
 }
 /*int main(int argc, char **argv)
 {
-	Matrix *mxt = mx_read_from_file("file");
+	FILE *in = argc > 1 ? fopen(argv[0], "r") : stdin;
+	Matrix *mxt = mx_read_from_file(in);
 	mx_print(mxt);
 	Cell *dmc = mx_get_cell(mxt, 0, 0);
 	printf("%d\n", dmc->type);
