@@ -1,64 +1,66 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <png.h>
+#include "cell.h"
 #include "png_creator.h"
 
 void write_png_file(char *filename)
 {
   FILE *fp = fopen(filename, "wb");
-  if(!fp) abort();
+  if(!fp)
+    fprintf(stderr, "[write_png_file] Nie udalo otworzyc sie pliku %s do zapisu", filename);
 
-  if (setjmp(png_jmpbuf(png))) abort();
+  png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+  if (!png)
+    fprintf(stderr, "[write_png_file] png_create_write_struct: nie powiodlo sie");
+
+  info = png_create_info_struct(png);
+  if (!info)
+    fprintf(stderr, "[write_png_file] png_create_info_struct: nie powiodlo sie");
+
+  if (setjmp(png_jmpbuf(png)))
+    fprintf(stderr, "[write_png_file] wystapil blad podczas init_io");
 
   png_init_io(png, fp);
+
+  if (setjmp(png_jmpbuf(png)))
+    fprintf(stderr, "[write_png_file] blad w trakcie tworzenia naglowka");
 
   png_set_IHDR(
     png,
     info,
     width, height,
-    8,
-    PNG_COLOR_TYPE_RGB,
+    bitDepth,
+    colorType,
     PNG_INTERLACE_NONE,
     PNG_COMPRESSION_TYPE_DEFAULT,
     PNG_FILTER_TYPE_DEFAULT
   );
 
-  if(bitDepth == 16)
-    png_set_strip_16(png);
-
-  if(colorType == PNG_COLOR_TYPE_PALETTE)
-    png_set_palette_to_rgb(png);
-
-  if(png_get_valid(png, info, PNG_INFO_tRNS))
-    png_set_tRNS_to_alpha(png);
-
-  png_set_expand(png);
   png_write_info(png, info);
+  if (setjmp(png_jmpbuf(png)))
+    fprintf(stderr, "[write_png_file] blad przy zapisie bajtow");
+
   png_write_image(png, rowPointers);
+  if (setjmp(png_jmpbuf(png)))
+    fprintf(stderr, "[write_png_file] blad przy koncu zapisu");
+
   png_write_end(png, NULL);
 
-
   for(unsigned int y = 0; y < height; y++)
-  {
     free(rowPointers[y]);
-  }
   free(rowPointers);
 
   fclose(fp);
 }
 
-void init()
+
+void process_png_file(Matrix *matrix)
 {
-
-}
-
-void process_png_file()
-{
-  png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-  if (!png) abort();
-
-  info = png_create_info_struct(png);
-  if (!info) abort();
+  width = matrix->c;
+  height = matrix->r;
+  bitDepth = 8;
+  colorType = PNG_COLOR_TYPE_RGB;
 
   rowPointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
   for(int y = 0; y < height; y++)
@@ -70,10 +72,11 @@ void process_png_file()
   {
       for (unsigned int x = 0; x < width; x++)
       {
-        png_bytep px = &(rowPointers[y][x * 3]);
+        png_bytep px = &(rowPointers[height -1 - y][x * 3]);
 
-          for(int i = 0; i < 3; ++i)
-            px[i] = array[y*width + x][i];
+        px[0] = matrix->data[y*height + x].R;
+        px[1] = matrix->data[y*height + x].G;
+        px[2] = matrix->data[y*height + x].B;
       }
   }
 }
@@ -81,11 +84,24 @@ void process_png_file()
 
 int main(int argc, char *argv[])
 {
+  Matrix matrix;
+  matrix.r = 100;
+  matrix.c = 100;
+  matrix.data = (Cell*)malloc(matrix.r*matrix.c*sizeof(Cell));
+  for(int i = 0 ; i < 100 ; i++)
+  {
+      matrix.data[i].G = (char)255;
+  }
+  for(int i = 0 ; i < 100 ; i++)
+  {
+      matrix.data[99*matrix.r+i].R = (char)255;
+  }
+
 
   if(argc < 2)
     fprintf(stderr, "Podaj nazwe nowo tworzonego pliku .png!\n");
 
-  process_png_file();
+  process_png_file(&matrix);
   write_png_file(argv[1]);
 
   return 0;
