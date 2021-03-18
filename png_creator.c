@@ -84,6 +84,9 @@ void process_png_file(Matrix *matrix)
 
 int main(int argc, char *argv[])
 {
+  if(argc < 2)
+    fprintf(stderr, "Podaj nazwe nowo tworzonego pliku .png!\n");
+  
   Matrix matrix;
   matrix.r = 100;
   matrix.c = 100;
@@ -96,10 +99,6 @@ int main(int argc, char *argv[])
   {
       matrix.data[99*matrix.r+i].R = (char)255;
   }
-
-
-  if(argc < 2)
-    fprintf(stderr, "Podaj nazwe nowo tworzonego pliku .png!\n");
 
   process_png_file(&matrix);
   write_png_file(argv[1]);
