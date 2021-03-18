@@ -142,7 +142,7 @@ char mx_get_single_val(Matrix *mx, int r, int c, char type) // wydobycie pojedyn
 }
 
 //char mx_print_rgb(Matrix* mx )
-
+/*
 int main(int argc, char **argv)
 {
 	Matrix *mxt = mx_read_from_file(argv[0]);
@@ -150,3 +150,4 @@ int main(int argc, char **argv)
 
 	return 0;
 }
+*/
