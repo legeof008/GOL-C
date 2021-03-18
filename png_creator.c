@@ -72,11 +72,25 @@ void process_png_file(Matrix *matrix)
   {
       for (unsigned int x = 0; x < width; x++)
       {
-        png_bytep px = &(rowPointers[height -1 - y][x * 3]);
+        png_bytep px = &(rowPointers[height - 1 - y][x * 3]);
 
-        px[0] = matrix->data[y*height + x].R;
-        px[1] = matrix->data[y*height + x].G;
-        px[2] = matrix->data[y*height + x].B;
+        if (mx_get_single_val(matrix, y, x, 't') == 0)  // martwa komorka
+        {
+          for(int i = 0 ; i < 3 ; i++)
+            px[i] = 0;
+        }
+        else if (mx_get_single_val(matrix, y, x, 't') == 2) // sciana
+        {
+          px[0] = 0;
+          px[1] = 0;
+          px[2] = 255;
+        }
+        else
+        {
+          px[0] = mx_get_single_val(matrix, y, x, 'r');
+          px[1] = mx_get_single_val(matrix, y, x, 'g');
+          px[2] = mx_get_single_val(matrix, y, x, 'b');
+        }
       }
   }
 }
@@ -86,17 +100,17 @@ int main(int argc, char *argv[])
 {
   if(argc < 2)
     fprintf(stderr, "Podaj nazwe nowo tworzonego pliku .png!\n");
-  
+    
   Matrix matrix;
   matrix.r = 100;
   matrix.c = 100;
   matrix.data = (Cell*)malloc(matrix.r*matrix.c*sizeof(Cell));
   for(int i = 0 ; i < 100 ; i++)
-  {
-      matrix.data[i].G = (char)255;
-  }
+      matrix.data[i].type = 2;
+
   for(int i = 0 ; i < 100 ; i++)
   {
+      matrix.data[99*matrix.r+i].type = 1;
       matrix.data[99*matrix.r+i].R = (char)255;
   }
 
