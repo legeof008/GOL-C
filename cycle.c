@@ -11,55 +11,55 @@ void add_neighbourhood_parametr(Matrix* mx, int maxRow, int maxColumn,char neigh
 	int i;
 if (row == 0) {
 	if (column == 0) {
-		(dmx + row * mx->c + column + 1)->neighbor++;
-		(dmx + row + 1 * mx->c + column)->neighbor++;
+		(dmx + row * mx->c + (column + 1))->neighbor++;
+		(dmx + (row + 1) * mx->c + column)->neighbor++;
 		if (neighbourType == 2) {			//przek�tna dla trybu 8 s�siadow
-			(dmx + row + 1 * mx->c + column + 1)->neighbor++;		//prz�k�tna prawo g�ra
+			(dmx + (row + 1) * mx->c + (column + 1))->neighbor++;		//prz�k�tna prawo g�ra
 		}
 		if (connection == 1) {
 			(dmx + row * mx->c + maxColumn)->neighbor++;
-			(dmx + row + maxRow * mx->c)->neighbor++;
+			(dmx  + maxRow * mx->c + 0)->neighbor++;
 			if (neighbourType == 2) {
-				(dmx + row + 1 * mx->c + maxColumn)->neighbor++;
-				(dmx + row + maxRow * mx->c + 1)->neighbor++;
-				(dmx + row + maxRow * mx->c + maxColumn)->neighbor++;
+				(dmx + (row + 1) * mx->c + maxColumn)->neighbor++;
+				(dmx + maxRow * mx->c + 1)->neighbor++;
+				(dmx + maxRow * mx->c + maxColumn)->neighbor++;
 			}
 		}
 	}
 	if (column > 0 && column < maxColumn) {
 		if (neighbourType == 2) {
 			for (i = -1;i < 2;i++)
-				(dmx + row + 1 * mx->c + column + i)->neighbor++;
+				(dmx + (row + 1) * mx->c + (column + i))->neighbor++;
 			if (connection == 1) {
 				for (i = -1;i < 2;i++)
-				(dmx + row + 1 * mx->c + column + i)->neighbor++;
+				(dmx + (row + 1) * mx->c + (column + i))->neighbor++;
 			}
 			else
 			{
-				dmx + row * mx->c + maxColumn->neighbor++;
+				(dmx + row * mx->c + maxColumn)->neighbor++;
 			}
 
 		}
 		else
 		{
-		(dmx + row + 1 * mx->c + column)->neighbor++;
+		(dmx + (row + 1) * mx->c + column)->neighbor++;
 		}
-	(dmx + row * mx->c + column + 1)->neighbor++;
-	(dmx + row * mx->c + column - 1)->neighbor++;
+	(dmx + row * mx->c + (column + 1))->neighbor++;
+	(dmx + row * mx->c + (column - 1))->neighbor++;
 
 	}
 	if (column == maxColumn) {
-		(dmx + row + 1 * mx->c + column)->neighbor++;
-		(dmx + row * mx->c + column - 1)->neighbor++;
+		(dmx + (row + 1) * mx->c + column)->neighbor++;
+		(dmx + row * mx->c + (column - 1))->neighbor++;
 		if (neighbourType == 2)
-			(dmx + row + 1 * mx->c + column - 1)->neighbor++;
+			(dmx + (row + 1) * mx->c + (column - 1))->neighbor++;
 		if (connection == 1) {
 			(dmx + row * mx->c )->neighbor++;
-			(dmx + row + maxRow* mx->c + maxColumn)->neighbor++;
+			(dmx + maxRow * mx->c + maxColumn)->neighbor++;
 			if (neighbourType == 2) {
-				(dmx + row + 1 * mx->c)->neighbor++;
-				(dmx + row + maxRow * mx->c + maxColumn - 1)->neighbor++;
-				(dmx + row + maxRow * mx->c)->neighbor++;
+				(dmx + (row + 1) * mx->c + 0 )->neighbor++;
+				(dmx + maxRow * mx->c + (maxColumn - 1))->neighbor++;
+				(dmx + maxRow * mx->c + 0)->neighbor++;
 			}
 		}
 	}
@@ -68,14 +68,14 @@ if (row != 0 && row != maxRow) {
 	if (column == 0) {
 		if (neighbourType == 2) {
 			for (i = row - 1; i < row + 2;i++) {
-				(dmx + i * mx->c + column + 1)->neighbor++;			//prwao blok
+				(dmx + i * mx->c + (column + 1))->neighbor++;			//prwao blok
 			}
 		}
 		else {
-			(dmx + row * mx->c + column + 1)->neighbor++;
+			(dmx + row * mx->c + (column + 1))->neighbor++;
 		}
-		(dmx + row + 1 * mx->c + column)->neighbor++;			//g�ra �rodek
-		(dmx + row - 1 * mx->c + column)->neighbor++;			//d� �rodek
+		(dmx + (row + 1) * mx->c + column)->neighbor++;			//g�ra �rodek
+		(dmx + (row - 1) * mx->c + column)->neighbor++;			//d� �rodek
 		if (connection == 1) {
 			if (neighbourType == 2) {
 				for (i = row - 1; i < row + 2;i++) {
@@ -90,37 +90,37 @@ if (row != 0 && row != maxRow) {
 	if (column > 0 && column < maxColumn) {
 		if (neighbourType == 2) {
 			for (i = row - 1; i < row + 2;i++) {
-				(dmx + i * mx->c + column - 1)->neighbor++;			//lewo blok
-				(dmx + i * mx->c + column + 1)->neighbor++;			//prwao blok
+				(dmx + i * mx->c + (column - 1))->neighbor++;			//lewo blok
+				(dmx + i * mx->c + (column + 1))->neighbor++;			//prwao blok
 			}
 		}
 		else {
-			(dmx + row * mx->c + column + 1)->neighbor++;			//prawo �rodek
-			(dmx + row * mx->c + column - 1)->neighbor++;			//lewo �rodek
+			(dmx + row * mx->c + (column + 1))->neighbor++;			//prawo �rodek
+			(dmx + row * mx->c + (column - 1))->neighbor++;			//lewo �rodek
 		}
-		(dmx + row + 1 * mx->c + column)->neighbor++;			//g�ra �rodek
-		(dmx + row - 1 * mx->c + column)->neighbor++;			//d� �rodek
+		(dmx + (row + 1) * mx->c + column)->neighbor++;			//g�ra �rodek
+		(dmx + (row - 1) * mx->c + column)->neighbor++;			//d� �rodek
 	}
 	if (column == maxColumn) {
 		if (neighbourType == 2) {
 			for (i = row - 1; i < row + 2;i++) {
-				(dmx + i * mx->c + column - 1)->neighbor++;			//lewo blok
+				(dmx + i * mx->c + (column - 1))->neighbor++;			//lewo blok
 			}
 		}
 		else {
-			(dmx + row * mx->c + column - 1)->neighbor++;
+			(dmx + row * mx->c + (column - 1))->neighbor++;
 		}
-		(dmx + row + 1 * mx->c + column)->neighbor++;			//g�ra �rodek
-		(dmx + row - 1 * mx->c + column)->neighbor++;			//d� �rodek
+		(dmx + (row + 1) * mx->c + column)->neighbor++;			//g�ra �rodek
+		(dmx + (row - 1) * mx->c + column)->neighbor++;			//d� �rodek
 		if (connection == 1) {
 			if (neighbourType == 2) {
 				for (i = row - 1; i < row + 2;i++) {
-					(dmx + i * mx->c )->neighbor++;			
+					(dmx + i * mx->c + 0 )->neighbor++;			
 				}
 			}
 			else
 			{
-				(dmx + row * mx->c)->neighbor++;
+				(dmx + row * mx->c + 0)->neighbor++;
 			}
 		}
 	}
@@ -128,17 +128,17 @@ if (row != 0 && row != maxRow) {
 if (row == maxRow) {
 	if (column == 0) {
 		if (neighbourType == 2) {
-			(dmx + row - 1 * mx->c + column + 1)->neighbor++;
+			(dmx + (row - 1) * mx->c + (column + 1))->neighbor++;
 			if (connection == 1) {
-				(dmx + maxRow - 1 * mx->c + maxColumn)->neighbor++;
-				(dmx  * mx->c + maxColumn)->neighbor++;
-				(dmx* mx->c + 1)->neighbor++;
+				(dmx + (maxRow - 1) * mx->c + maxColumn)->neighbor++;
+				(dmx + 0 * mx->c + maxColumn)->neighbor++;
+				(dmx + 0 * mx->c + 1)->neighbor++;
 			}
 		}
-		(dmx + row * mx->c + column + 1)->neighbor++;
-		(dmx + row - 1 * mx->c + column)->neighbor++;
+		(dmx + row * mx->c + (column + 1))->neighbor++;
+		(dmx + (row - 1) * mx->c + column)->neighbor++;
 		if (connection == 1 && neighbourType == 1) {
-			(dmx* mx->c)->neighbor++;
+			(dmx + 0 * mx->c + 0)->neighbor++;
 			(dmx + maxRow* mx->c + maxColumn)->neighbor++;
 		}
 			
@@ -146,34 +146,34 @@ if (row == maxRow) {
 	if (column > 0 && column < maxColumn) {
 		if (neighbourType == 2) {
 			for (i = -1;i < 2;i++)
-				(dmx + row - 1 * mx->c + column + i)->neighbor++;
+				(dmx + (row - 1) * mx->c + (column + i))->neighbor++;
 			if(connection==1)
 				for (i = -1;i < 2;i++)
-					(dmx * mx->c + column + i)->neighbor++;
+					(dmx + 0* mx->c + (column + i))->neighbor++;
 		}
 		else
 		{
-			(dmx + row * mx->c + column - 1)->neighbor++;
+			(dmx + row * mx->c + (column - 1))->neighbor++;
 			if(connection==1)
-				(dmx * mx->c + column)->neighbor++;
+				(dmx + 0 * mx->c + column)->neighbor++;
 		}
-		(dmx + row * mx->c + column + 1)->neighbor++;
-		(dmx + row * mx->c + column - 1)->neighbor++;
+		(dmx + row * mx->c + (column + 1))->neighbor++;
+		(dmx + row * mx->c + (column - 1))->neighbor++;
 	}
 	if (column == maxColumn) {
 		if (neighbourType == 2) {
-			(dmx + row - 1 * mx->c + column - 1)->neighbor++;
+			(dmx + (row - 1) * mx->c + (column - 1))->neighbor++;
 			if(connection==1){
-				(dmx * mx->c + maxColumn - 1)->neighbor++;
-				(dmx * mx->c )->neighbor++;
-				(dmx + maxRow - 1* mx->c)->neighbor++;
+				(dmx + 0 * mx->c + (maxColumn - 1))->neighbor++;
+				(dmx + 0 * mx->c )->neighbor++;
+				(dmx + (maxRow - 1)* mx->c + 0)->neighbor++;
 			}
 		}
-		(dmx + row * mx->c + column - 1)->neighbor++;
-		(dmx + row - 1 * mx->c + column)->neighbor++;
+		(dmx + row * mx->c + (column - 1))->neighbor++;
+		(dmx + (row - 1) * mx->c + column)->neighbor++;
 		if (connection == 1 * *neighbourType == 1) {
-			(dmx* mx->c +  maxColumn)->neighbor++;
-			(dmx + maxRow* mx->c)->neighbor++;
+			(dmx + 0 * mx->c +  maxColumn)->neighbor++;
+			(dmx + maxRow* mx->c + 0)->neighbor++;
 		}
 
 	}
@@ -187,12 +187,17 @@ void make_a_cycle_rewrite_struct(Matrix* mx, Matrix* nx, int maxRow, int maxColu
 	int j;
 	for (i = 0; i < maxRow; i++) {
 		for (j = 0; j < maxColumn; j++) {
-			if ((dmx + i * mx->c + j)->type == 2)		//przepisywanie scian
+			if ((dmx + i * mx->c + j)->type == 2){		//przepisywanie scian
 				(dmc + i * mx->c + j)->type = 2;
+				(dmx + i * col + j)->B=(dmc + i * col + j)->B;
+			}
 			if ((dmx + i * mx->c + j)->type == 1) {
 				if ((dmx + i * mx->c + j)->neighbor == 2 || (dmx + i * mx->c + j)->neighbor == 3) {		//przepisuje punkt zywy do nowej strukturze
 					(dmc + i * nx->c + j)->type = 1;
 					add_neighbourhood_parametr(nx, maxRow, maxColumn, neighbourType, i, j);		//dodaje parametr sasiad
+					(dmx + i * col + j)->R=(dmc + i * col + j)->R;
+					(dmx + i * col + j)->G=(dmc + i * col + j)->G;
+					(dmx + i * col + j)->B=(dmc + i * col + j)->B;
 				}
 			}
 			if ((dmx + i * mx->c + j)->type == 0 && (dmx + i * mx->c + j)->neighbor == 3) {
