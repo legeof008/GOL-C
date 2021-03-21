@@ -27,7 +27,7 @@ Matrix *mx_alloc(int r, int c); // alokuje pamięć na Matrix
 
 Matrix* mx_read_from_file(FILE *f) ; // Czyta z pliku
 
-Cell *mx_get_cell(Matrix *mx, int r, int c); 
+Cell *mx_get_cell(Matrix *mx, int r, int c); // Daje komórkę
 
 void mx_print(Matrix *mx); // wypisuje jak macierz poglądowo
 

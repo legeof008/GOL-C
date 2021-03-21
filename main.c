@@ -3,9 +3,14 @@
 
 #include "cell.h"
 #include "cycle.h"
-#include "getopt.h"
 #include "image_creator.h"
 #include "png_creator.h"
+
+#if defined (_WIN64)
+	#include "getopt.h"
+#elif defined (__unix__) || defined(__linux__)
+	#include <unistd.h>
+#endif
 
 // TODO: Potem usune to i zastapie "null" na "NULL"
 #define null NULL
