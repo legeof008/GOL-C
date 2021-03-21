@@ -10,9 +10,6 @@ typedef struct{
 	char neighbor; // miedzy 0 a 8 sąsiadów
 	char padding [3];
 }Cell;
-#pragma pack(pop)
-
-#pragma pack(push, 1)
 typedef struct {
 	
 	Cell* data;
