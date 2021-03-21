@@ -5,6 +5,7 @@
 #include "cycle.h"
 #include "getopt.h"
 #include "image_creator.h"
+#include "png_creator.h"
 
 // TODO: Potem usune to i zastapie "null" na "NULL"
 #define null NULL
@@ -123,8 +124,11 @@ int main(int argc, char* argv[])
 	if (bmpOutputFile != null)	// Zapis do pliku .bmp
 		save_as_bitmap(bmpOutputFile, board, scale);
 
-	if (pngOutputFile != null)	// Zapis do pliku .png
-		;// TODO: Zapis do .png
+	if (pngOutputFile != null)   	// Zapis do pliku .png
+	{
+		process_png_file(board, scale);
+		write_png_file(pngOutputFile);
+	}
 
 	mx_free(board);
 	mx_free(nx);
