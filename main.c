@@ -6,15 +6,21 @@
 #include "cycle.h"
 #include "image_creator.h"
 
-//#if defined (_WIN64)
-//#include "getopt.h"
-//#elif defined (__unix__) || defined(__linux__)
-//#include <unistd.h>
-//#endif
-
-// TODO: /\ Cos nie do konca dziala w VS
-
+#if defined(_MSC_VER)
 #include "getopt.h"
+#elif defined(__GNUC__)
+#include <unistd.h>
+#endif
+
+// TODO: /\ Cos nie do konca dziala w VS 
+/* 
+	Maciek : Tamto poprzednie makro 
+	zrobilem bezmyslnie, to jest zrobione
+	wiec powinno byc cacy
+
+	#include "getopt.h"
+*/
+
 
 #define DEFAULT_NUMBER_OF_CYCLES 1
 #define DEFAULT_OUTPUT_SCALE 1;
