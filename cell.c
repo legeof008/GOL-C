@@ -15,9 +15,9 @@ void mx_init(Matrix * mx) // inicjalizuje macierz, na białą planszę martwych 
 		for (int j = 0; j < mx->c; j++)
 		{
 			(dmx + i * col + j)->type = CH 0x00;
-			(dmx + i * col + j)->R = CH 0xFF;
-			(dmx + i * col + j)->G = CH 0xFF;
-			(dmx + i * col + j)->B = CH 0xFF;
+			(dmx + i * col + j)->R = CH 0x00;
+			(dmx + i * col + j)->G = CH 0x00;
+			(dmx + i * col + j)->B = CH 0x00;
 			(dmx + i * col + j)->neighbor = CH 0x00;
 		}
 	}
@@ -70,7 +70,7 @@ Matrix* mx_read_from_file(FILE *f) // Czyta z pliku
 		return NULL;
 	}
 	Matrix *A = (Matrix *)malloc(sizeof(Matrix));
-	fscanf(f, "%d %d %c %c", &(A->r), &(A->c), &(A->nei), &(A->fol));
+	fscanf(f, "%d %d %d %d", &(A->r), &(A->c), &(A->nei), &(A->fol));
 	mx_init(A);
 	while (fscanf(f, "%d %d %d %d %d %d", &x, &y, &type, &R, &G, &B) == 6)
 	{
@@ -93,11 +93,12 @@ void mx_print(Matrix *mx) // wypisuje jak macierz poglądowo
 	}
 }
 
-Cell *mx_get_cell(Matrix *mx, int r, int c)
+Cell mx_get_cell(Matrix *mx, int r, int c)
 {
 	Cell *dmx = mx->data;
-	return (dmx + r * mx->c + c);
+	return (dmx[r * mx->c + c]);
 }
+
 char mx_get_single_val(Matrix *mx, int r, int c, char type) // wydobycie pojedynczej cechy komórki, t- type, n - sąsiad
 {
 	Cell* dmx = mx->data;
@@ -130,6 +131,7 @@ char mx_get_single_val(Matrix *mx, int r, int c, char type) // wydobycie pojedyn
 		break;
 	}
 }
+
 void mx_cpy(Matrix *src, Matrix *dest) //Kopiowanie macierzy z zerowaniem src
 {
 	int col = src->c;
@@ -145,9 +147,9 @@ void mx_cpy(Matrix *src, Matrix *dest) //Kopiowanie macierzy z zerowaniem src
 			(destd + i * col + j)->type = (srcd + i * col + j)->type;
 			(destd + i * col + j)->neighbor = (srcd + i * col + j)->neighbor;
 			(srcd + i * col + j)->type = CH 0x00;
-			(srcd + i * col + j)->R = CH 0xFF;
-			(srcd + i * col + j)->G = CH 0xFF;
-			(srcd + i * col + j)->B = CH 0xFF;
+			(srcd + i * col + j)->R = CH 0x00;
+			(srcd + i * col + j)->G = CH 0x00;
+			(srcd + i * col + j)->B = CH 0x00;
 			(srcd + i * col + j)->neighbor = CH 0x00;
 		}
 	}

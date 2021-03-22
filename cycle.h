@@ -3,8 +3,10 @@
 
 #include "cell.h"
 
-void add_neighbourhood_parametr(Matrix* mx, int maxRow, int maxColumn, char neighbourType, int row, int column, char connection);
+void count_neighbours_4(Matrix* mx);
+void make_a_cycle_rewrite_struct_4(Matrix* mx, Matrix* nx, int maxRow, int maxColumn);
 
-void make_a_cycle_rewrite_struct(Matrix* mx, Matrix* nx, int maxRow, int maxColumn, char neighbourType);
+void count_neighbours_8(Matrix* mx);
+void make_a_cycle_rewrite_struct_8(Matrix* mx, Matrix* nx, int maxRow, int maxColumn);
 
 #endif // _CYCLE_H_
