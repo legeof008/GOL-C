@@ -70,7 +70,12 @@ Matrix* mx_read_from_file(FILE *f) // Czyta z pliku
 		return NULL;
 	}
 	Matrix *A = (Matrix *)malloc(sizeof(Matrix));
-	fscanf(f, "%d %d %d %d", &(A->r), &(A->c), &(A->nei), &(A->fol));
+	if (A == NULL)
+	{
+		fprintf(stderr, "Error readin file\n");
+		return NULL;
+	}
+	fscanf(f, "%d %d"/* %d %d"*/, &(A->r), &(A->c)/*, &(A->nei), &(A->fol)*/);
 	mx_init(A);
 	while (fscanf(f, "%d %d %d %d %d %d", &x, &y, &type, &R, &G, &B) == 6)
 	{
@@ -137,6 +142,7 @@ void mx_cpy(Matrix *src, Matrix *dest) //Kopiowanie macierzy z zerowaniem src
 	int col = src->c;
 	Cell *srcd = src->data;
 	Cell *destd = dest->data;
+
 	for (int i = 0; i < src->c; i++)
 	{
 		for (int j = 0; j < src->c; j++)
@@ -154,13 +160,3 @@ void mx_cpy(Matrix *src, Matrix *dest) //Kopiowanie macierzy z zerowaniem src
 		}
 	}
 }
-/*int main(int argc, char **argv)
-{
-	FILE *in = argc > 1 ? fopen(argv[0], "r") : stdin;
-	Matrix *mxt = mx_read_from_file(in);
-	mx_print(mxt);
-	Cell *dmc = mx_get_cell(mxt, 0, 0);
-	printf("%d\n", dmc->type);
-
-	return 0;
-}*/

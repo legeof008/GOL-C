@@ -15,9 +15,9 @@ unsigned char add_clamped(unsigned char f, unsigned char s)
 	return f + s;
 }
 
-int clamp_index(int v, int s, char fold)
+int clamp_index(int v, int s, int connection)
 {
-	if (fold == 1)
+	if (connection == 1)
 	{
 		if (v < 0)
 			return v + s;
@@ -35,55 +35,24 @@ int clamp_index(int v, int s, char fold)
 	return v;
 }
 
-Cell* get_neighbours_8(Matrix* mx, int x, int y)
-{
-	Cell* neighbours = malloc(sizeof(Cell) * 3);
-	int neighbourCounter = 0;
-
-	int ny, nx;
-
-	if (neighbours == NULL)
-	{
-		fprintf(stderr, "Nie udalo sie zarezerwowac pamieci na liste sasiadow");
-		return NULL;
-	}
-
-	for (ny = clamp_index(y - 1, mx->r, mx->fol); ny != clamp_index(y + 2, mx->r, mx->fol); ny = clamp_index(++ny, mx->r, mx->fol))
-	{
-		for (nx = clamp_index(x - 1, mx->c, mx->fol); nx != clamp_index(x + 2, mx->c, mx->fol); nx = clamp_index(++nx, mx->c, mx->fol))
-		{
-			if (!(nx == x && ny == y) && mx_get_single_val(mx, ny, nx, 't') == 1)
-				neighbours[neighbourCounter++] = mx_get_cell(mx, ny, nx);
-		}
-	}
-
-	if (neighbourCounter != 3)
-	{
-		fprintf(stderr, "Komorka(%d, %d) nie posiada 3 sasiadow (%d)\n", x, y, neighbourCounter);
-		return NULL;
-	}
-
-	return neighbours;
-}
-
-Cell* get_neighbours_4(Matrix* mx, int x, int y)
+Cell* get_neighbours_4(Matrix* mx, int x, int y, int connection)
 {
 	Cell neighbours[3];
 	int neighbourCounter = 0;
 	int nx, ny;
 
-	ny = clamp_index(y - 1, mx->r, mx->fol);
+	ny = clamp_index(y - 1, mx->r, connection);
 	nx = x;
 	if (mx_get_single_val(mx, ny, nx, 't') == 1)
 		neighbours[neighbourCounter++] = mx_get_cell(mx, ny, nx);
-	ny = clamp_index(y + 1, mx->r, mx->fol);
+	ny = clamp_index(y + 1, mx->r, connection);
 	if (mx_get_single_val(mx, ny, nx, 't') == 1)
 		neighbours[neighbourCounter++] = mx_get_cell(mx, ny, nx);
 	ny = y;
-	nx = clamp_index(x - 1, mx->c, mx->fol);
+	nx = clamp_index(x - 1, mx->c, connection);
 	if (mx_get_single_val(mx, ny, nx, 't') == 1)
 		neighbours[neighbourCounter++] = mx_get_cell(mx, ny, nx);
-	nx = clamp_index(x + 1, mx->c, mx->fol);
+	nx = clamp_index(x + 1, mx->c, connection);
 	if (mx_get_single_val(mx, ny, nx, 't') == 1)
 	{
 		if (neighbourCounter == 3)
@@ -104,7 +73,7 @@ Cell* get_neighbours_4(Matrix* mx, int x, int y)
 }
 
 // Zwraca komorke z polaczonym kolorem z 2 rodzicow
-Cell create_cell_with_inherited_colors(Matrix* mx, int x, int y, int n)
+Cell create_cell_with_inherited_colors_4(Matrix* mx, int x, int y, int n, int connection)
 {
 	Cell* neighbours;
 
@@ -125,10 +94,8 @@ Cell create_cell_with_inherited_colors(Matrix* mx, int x, int y, int n)
 
 	int bitNumbers[3];
 
-	if (mx->nei == 2)
-		neighbours = get_neighbours_8(mx, x, y);
-	else
-		neighbours = get_neighbours_4(mx, x, y);
+	
+	neighbours = get_neighbours_4(mx, x, y, connection);
 
 	if (neighbours == NULL)
 	{
@@ -178,13 +145,12 @@ Cell create_cell_with_inherited_colors(Matrix* mx, int x, int y, int n)
 	return newCell;
 }
 
-void add_neighbourhood_parametr_4(Matrix* mx, int row, int column)
+void add_neighbourhood_parametr_4(Matrix* mx, int row, int column, int connection)
 {
 	Cell* dmx = mx->data;
 	int i;
 	int maxRow = mx->r - 1;
 	int maxColumn = mx->c - 1;
-	char connection = mx->fol;
 
 	if (row == 0)
 	{
@@ -292,17 +258,17 @@ void add_neighbourhood_parametr_4(Matrix* mx, int row, int column)
 	}
 }
 
-void count_neighbours_4(Matrix* mx)
+void count_neighbours_4(Matrix* mx, int connection)
 {
 	for (int i = 0; i < mx->r; i++)
 		for (int j = 0; j < mx->c; j++)
 		{
 			if (mx_get_single_val(mx, i, j, 't') == 1)
-				add_neighbourhood_parametr_4(mx, i, j);
+				add_neighbourhood_parametr_4(mx, i, j, connection);
 		}
 }
 
-void make_a_cycle_rewrite_struct_4(Matrix* mx, Matrix* nx, int maxRow, int maxColumn)
+void make_a_cycle_rewrite_struct_4(Matrix* mx, Matrix* nx, int maxRow, int maxColumn, int connection)
 {
 	Cell* dmx = mx->data;
 	Cell* dnx = nx->data;
@@ -322,7 +288,7 @@ void make_a_cycle_rewrite_struct_4(Matrix* mx, Matrix* nx, int maxRow, int maxCo
 				if ((dmx + i * mx->c + j)->neighbor == 2 || (dmx + i * mx->c + j)->neighbor == 3) 
 				{		//przepisuje punkt zywy do nowej strukturze
 					(dnx + i * nx->c + j)->type = 1;
-					add_neighbourhood_parametr_4(nx, i, j);		//dodaje parametr sasiad
+					add_neighbourhood_parametr_4(nx, i, j, connection);		//dodaje parametr sasiad
 					(dnx + i * mx->c + j)->R = (dmx + i * mx->c + j)->R;
 					(dnx + i * mx->c + j)->G = (dmx + i * mx->c + j)->G;
 					(dnx + i * mx->c + j)->B = (dmx + i * mx->c + j)->B;
@@ -330,20 +296,122 @@ void make_a_cycle_rewrite_struct_4(Matrix* mx, Matrix* nx, int maxRow, int maxCo
 			}
 			else if ((dmx + i * mx->c + j)->type == 0 && (dmx + i * mx->c + j)->neighbor == 3) 
 			{
-				dnx[i * mx->c + j] = create_cell_with_inherited_colors(mx, j, i, (dnx +i * mx->c + j)->neighbor);
-				add_neighbourhood_parametr_4(nx, i, j);
+				dnx[i * mx->c + j] = create_cell_with_inherited_colors_4(mx, j, i, (dnx +i * mx->c + j)->neighbor, connection);
+				add_neighbourhood_parametr_4(nx, i, j, connection);
 			}
 		}
 	}
 }
 
-void add_neighbourhood_parametr_8(Matrix* mx, int row, int column)
+
+Cell* get_neighbours_8(Matrix* mx, int x, int y, int connection)
+{
+	Cell* neighbours = malloc(sizeof(Cell) * 3);
+	int neighbourCounter = 0;
+
+	int ny, nx;
+
+	if (neighbours == NULL)
+	{
+		fprintf(stderr, "Nie udalo sie zarezerwowac pamieci na liste sasiadow");
+		return NULL;
+	}
+
+	for (ny = clamp_index(y - 1, mx->r, connection); ny != clamp_index(y + 2, mx->r, connection); ny = clamp_index(++ny, mx->r, connection))
+	{
+		for (nx = clamp_index(x - 1, mx->c, connection); nx != clamp_index(x + 2, mx->c, connection); nx = clamp_index(++nx, mx->c, connection))
+		{
+			if (!(nx == x && ny == y) && mx_get_single_val(mx, ny, nx, 't') == 1)
+				neighbours[neighbourCounter++] = mx_get_cell(mx, ny, nx);
+		}
+	}
+
+	if (neighbourCounter != 3)
+	{
+		fprintf(stderr, "Komorka(%d, %d) nie posiada 3 sasiadow (%d)\n", x, y, neighbourCounter);
+		return NULL;
+	}
+
+	return neighbours;
+}
+
+Cell create_cell_with_inherited_colors_8(Matrix* mx, int x, int y, int n, int connection)
+{
+	Cell* neighbours;
+
+	Cell mainParent;
+	Cell secondParent;
+
+	Cell newCell =
+	{
+		.type = 1,
+		.R = 0,
+		.G = 0,
+		.B = 0,
+		.neighbor = n
+	};
+
+	int mainParentIndex;
+	int secondParentIndex;
+
+	int bitNumbers[3];
+
+		neighbours = get_neighbours_8(mx, x, y, connection);
+
+	if (neighbours == NULL)
+	{
+		fprintf(stderr, "Nie udalo sie znalezc sasiadow\n");
+		return newCell;
+	}
+
+	// Losowanie indexow rodzicow
+	mainParentIndex = rand() % 3;
+	do
+	{
+		secondParentIndex = rand() % 3;
+	} while (secondParentIndex == mainParentIndex);
+
+	mainParent = neighbours[mainParentIndex];
+	secondParent = neighbours[secondParentIndex];
+
+	// Losowanie numerow bitow, ktore zostana dodane
+	bitNumbers[0] = rand() % 24;
+	do
+	{
+		bitNumbers[1] = rand() % 24;
+	} while (bitNumbers[1] == bitNumbers[0]);
+	do
+	{
+		bitNumbers[2] = rand() % 24;
+	} while (bitNumbers[2] == bitNumbers[0] || bitNumbers[2] == bitNumbers[1]);
+
+	// Tworzenie kolorow z wylosowanych numerow bitow
+	for (int i = 0; i < 3; i++)
+	{
+		if (bitNumbers[i] < 8)
+			newCell.B += (1 << bitNumbers[i]) & secondParent.B;
+		else if (bitNumbers[i] < 16)
+			newCell.G += (1 << (bitNumbers[i] % 8)) & secondParent.G;
+		else
+			newCell.R += (1 << (bitNumbers[i] % 8)) & secondParent.R;
+	}
+
+	// Dodawanie kolorow glownego rodzica
+	newCell.R = add_clamped(mainParent.R, newCell.R);
+	newCell.G = add_clamped(mainParent.G, newCell.G);
+	newCell.B = add_clamped(mainParent.B, newCell.B);
+
+	//printf("----\n%d %d %d \nmain %d %d %d\nsecond %d %d %d\n", newCell.R, newCell.G, newCell.B, mainParent.R, mainParent.G, mainParent.B, secondParent.R, secondParent.G, secondParent.B);
+	//printf("%d %d %d\n", bitNumbers[0], bitNumbers[1], bitNumbers[2]);
+	return newCell;
+}
+
+void add_neighbourhood_parametr_8(Matrix* mx, int row, int column, int connection)
 {
 	Cell* dmx = mx->data;
 	int i;
 	int maxRow = mx->r - 1;
 	int maxColumn = mx->c - 1;
-	char connection = mx->fol;
 
 	if (row == 0)
 	{
@@ -430,9 +498,9 @@ void add_neighbourhood_parametr_8(Matrix* mx, int row, int column)
 			(dmx + (row - 1) * mx->c + column)->neighbor++;			// dol
 			if (connection == 1)		// Tryb zawijania
 			{
-				(dmx + (row + 1) * mx->c + maxColumn)->neighbor++;	// gora prawo
-				(dmx + row * mx->c + maxColumn)->neighbor++;		// prawo
-				(dmx + (row - 1) * mx->c + maxColumn)->neighbor++;	// dol prawo
+				(dmx + (row + 1) * mx->c)->neighbor++;				// gora prawo
+				(dmx + row * mx->c)->neighbor++;					// prawo
+				(dmx + (row - 1) * mx->c)->neighbor++;				// dol prawo
 			}
 		}
 		else
@@ -495,17 +563,17 @@ void add_neighbourhood_parametr_8(Matrix* mx, int row, int column)
 	}
 }
 
-void count_neighbours_8(Matrix* mx)
+void count_neighbours_8(Matrix* mx, int connection)
 {
 	for (int i = 0; i < mx->r; i++)
 		for (int j = 0; j < mx->c; j++)
 		{
 			if (mx_get_single_val(mx, i, j, 't') == 1)
-				add_neighbourhood_parametr_8(mx, i, j);
+				add_neighbourhood_parametr_8(mx, i, j, connection);
 		}
 }
 
-void make_a_cycle_rewrite_struct_8(Matrix* mx, Matrix* nx, int maxRow, int maxColumn)
+void make_a_cycle_rewrite_struct_8(Matrix* mx, Matrix* nx, int maxRow, int maxColumn, int connection)
 {
 	Cell* dmx = mx->data;
 	Cell* dnx = nx->data;
@@ -525,7 +593,7 @@ void make_a_cycle_rewrite_struct_8(Matrix* mx, Matrix* nx, int maxRow, int maxCo
 				if ((dmx + i * mx->c + j)->neighbor == 2 || (dmx + i * mx->c + j)->neighbor == 3)
 				{		//przepisuje punkt zywy do nowej strukturze
 					(dnx + i * nx->c + j)->type = 1;
-					add_neighbourhood_parametr_8(nx, i, j);		//dodaje parametr sasiad
+					add_neighbourhood_parametr_8(nx, i, j, connection);		//dodaje parametr sasiad
 					(dnx + i * mx->c + j)->R = (dmx + i * mx->c + j)->R;
 					(dnx + i * mx->c + j)->G = (dmx + i * mx->c + j)->G;
 					(dnx + i * mx->c + j)->B = (dmx + i * mx->c + j)->B;
@@ -533,8 +601,8 @@ void make_a_cycle_rewrite_struct_8(Matrix* mx, Matrix* nx, int maxRow, int maxCo
 			}
 			else if ((dmx + i * mx->c + j)->type == 0 && (dmx + i * mx->c + j)->neighbor == 3)
 			{
-				dnx[i * mx->c + j] = create_cell_with_inherited_colors(mx, j, i, (dnx +i * mx->c + j)->neighbor);
-				add_neighbourhood_parametr_8(nx, i, j);
+				dnx[i * mx->c + j] = create_cell_with_inherited_colors_8(mx, j, i, (dnx +i * mx->c + j)->neighbor, connection);
+				add_neighbourhood_parametr_8(nx, i, j, connection);
 			}
 		}
 	}
