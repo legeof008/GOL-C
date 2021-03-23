@@ -40,9 +40,17 @@ Cell* get_neighbours_8(Matrix* mx, int x, int y)
 	Cell* neighbours = malloc(sizeof(Cell) * 3);
 	int neighbourCounter = 0;
 
-	for (int ny = clamp_index(y - 1, mx->r, mx->fol); ny != clamp_index(y + 2, mx->r, mx->fol); ny = clamp_index(++ny, mx->r, mx->fol))
+	int ny, nx;
+
+	if (neighbours == NULL)
 	{
-		for (int nx = clamp_index(x - 1, mx->c, mx->fol); nx != clamp_index(x + 2, mx->c, mx->fol); nx = clamp_index(++nx, mx->c, mx->fol))
+		fprintf(stderr, "Nie udalo sie zarezerwowac pamieci na liste sasiadow");
+		return NULL;
+	}
+
+	for (ny = clamp_index(y - 1, mx->r, mx->fol); ny != clamp_index(y + 2, mx->r, mx->fol); ny = clamp_index(++ny, mx->r, mx->fol))
+	{
+		for (nx = clamp_index(x - 1, mx->c, mx->fol); nx != clamp_index(x + 2, mx->c, mx->fol); nx = clamp_index(++nx, mx->c, mx->fol))
 		{
 			if (!(nx == x && ny == y) && mx_get_single_val(mx, ny, nx, 't') == 1)
 				neighbours[neighbourCounter++] = mx_get_cell(mx, ny, nx);
@@ -103,73 +111,70 @@ Cell create_cell_with_inherited_colors(Matrix* mx, int x, int y, int n)
 	Cell mainParent;
 	Cell secondParent;
 
-	//Cell newCell =
-	//{
-	//	.type = 1,
-	//	.R = 0,
-	//	.G = 0,
-	//	.B = 0,
-	//	.neighbor = 0
-	//};
 	Cell newCell =
 	{
 		.type = 1,
-		.R = 255,
+		.R = 0,
 		.G = 0,
 		.B = 0,
 		.neighbor = n
 	};
 
-	//int mainParentIndex;
-	//int secondParentIndex;
+	int mainParentIndex;
+	int secondParentIndex;
 
-	//int bitNumbers[3];
+	int bitNumbers[3];
 
-	//if (mx->nei == 2)
-	//	neighbours = get_neighbours_8(mx, x, y);
-	//else
-	//	neighbours = get_neighbours_4(mx, x, y);
+	if (mx->nei == 2)
+		neighbours = get_neighbours_8(mx, x, y);
+	else
+		neighbours = get_neighbours_4(mx, x, y);
 
-	//if (neighbours == NULL)
-	//	return newCell;
+	if (neighbours == NULL)
+	{
+		fprintf(stderr, "Nie udalo sie znalezc sasiadow\n");
+		return newCell;
+	}
 
-	//// Losowanie indexow rodzicow
-	//mainParentIndex = rand() % 3;
-	//do
-	//{
-	//	secondParentIndex = rand() % 3;
-	//} while (secondParentIndex == mainParentIndex);
+	// Losowanie indexow rodzicow
+	mainParentIndex = rand() % 3;
+	do
+	{
+		secondParentIndex = rand() % 3;
+	} while (secondParentIndex == mainParentIndex);
 
-	//mainParent = neighbours[mainParentIndex];
-	//secondParent = neighbours[secondParentIndex];
+	mainParent = neighbours[mainParentIndex];
+	secondParent = neighbours[secondParentIndex];
 
-	//// Losowanie numerow bitow, ktore zostana dodane
-	//bitNumbers[0] = rand() % 24;
-	//do
-	//{
-	//	bitNumbers[1] = rand() % 24;
-	//} while (bitNumbers[1] == bitNumbers[0]);
-	//do
-	//{
-	//	bitNumbers[2] = rand() % 24;
-	//} while (bitNumbers[2] == bitNumbers[0] || bitNumbers[2] == bitNumbers[1]);
+	// Losowanie numerow bitow, ktore zostana dodane
+	bitNumbers[0] = rand() % 24;
+	do
+	{
+		bitNumbers[1] = rand() % 24;
+	} while (bitNumbers[1] == bitNumbers[0]);
+	do
+	{
+		bitNumbers[2] = rand() % 24;
+	} while (bitNumbers[2] == bitNumbers[0] || bitNumbers[2] == bitNumbers[1]);
 
-	//// Tworzenie kolorow z wylosowanych numerow bitow
-	//for (int i = 0; i < 3; i++)
-	//{
-	//	if (bitNumbers[i] < 8)
-	//		newCell.B += (1 << bitNumbers[i]) & secondParent.B;
-	//	else if (bitNumbers[i] < 16)
-	//		newCell.G += (1 << (bitNumbers[i] % 8)) & secondParent.G;
-	//	else
-	//		newCell.R += (1 << (bitNumbers[i] % 8)) & secondParent.R;
-	//}
+	// Tworzenie kolorow z wylosowanych numerow bitow
+	for (int i = 0; i < 3; i++)
+	{
+		if (bitNumbers[i] < 8)
+			newCell.B += (1 << bitNumbers[i]) & secondParent.B;
+		else if (bitNumbers[i] < 16)
+			newCell.G += (1 << (bitNumbers[i] % 8)) & secondParent.G;
+		else
+			newCell.R += (1 << (bitNumbers[i] % 8)) & secondParent.R;
+	}
 
-	//// Dodawanie kolorow glownego rodzica
-	//newCell.R = add_clamped(mainParent.R, newCell.R);
-	//newCell.G = add_clamped(mainParent.G, newCell.G);
-	//newCell.B = add_clamped(mainParent.B, newCell.B);
+	// Dodawanie kolorow glownego rodzica
+	newCell.R = add_clamped(mainParent.R, newCell.R);
+	newCell.G = add_clamped(mainParent.G, newCell.G);
+	newCell.B = add_clamped(mainParent.B, newCell.B);
 
+	//printf("----\n%d %d %d \nmain %d %d %d\nsecond %d %d %d\n", newCell.R, newCell.G, newCell.B, mainParent.R, mainParent.G, mainParent.B, secondParent.R, secondParent.G, secondParent.B);
+	//printf("%d %d %d\n", bitNumbers[0], bitNumbers[1], bitNumbers[2]);
 	return newCell;
 }
 
