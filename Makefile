@@ -1,8 +1,8 @@
 CC=gcc
 OBJECTS= *.c
-CFLAGS= -lpng
-NAME=gol
-gol: $(OBJECTS)
-	$(CC) -o $(NAME) $(OBJECTS) $(CFLAGS)
+CFLAGS= -g -Og 
+NAME=memleak
+memleak: $(OBJECTS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJECTS) -lpng
 clean:
 	rm $(NAME)

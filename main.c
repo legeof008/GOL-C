@@ -225,7 +225,7 @@ int main(int argc, char* argv[])
 
 
 	// HACK: Tylko potrzebne mi do odpalania programu w VS
-	getchar();
+	//getchar();
 
 	return 0;
 }
