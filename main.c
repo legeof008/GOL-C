@@ -222,10 +222,11 @@ int main(int argc, char* argv[])
 		process_png_file(board, scale);
 		write_png_file(pngOutputFile);
 	}
-
+	mx_free(nx);
+	mx_free(board);
 
 	// HACK: Tylko potrzebne mi do odpalania programu w VS
 	//getchar();
 
-	return 0;
+	exit(0);
 }

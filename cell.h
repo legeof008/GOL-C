@@ -26,6 +26,8 @@ Matrix* mx_read_from_file(FILE *f) ; // Czyta z pliku
 
 Cell mx_get_cell(Matrix *mx, int r, int c); 
 
+void mx_free(Matrix* mx);
+
 void mx_print(Matrix *mx); // wypisuje jak macierz poglądowo
 
 void mx_cpy(Matrix *src, Matrix *dest); //Kopiowanie macierzy z zerowaniem src

@@ -320,6 +320,7 @@ Cell* get_neighbours_8(Matrix* mx, int x, int y, int connection)
 	if (neighbours == NULL)
 	{
 		fprintf(stderr, "Nie udalo sie zarezerwowac pamieci na liste sasiadow");
+		free(neighbours);
 		return NULL;
 	}
 
@@ -335,6 +336,7 @@ Cell* get_neighbours_8(Matrix* mx, int x, int y, int connection)
 	if (neighbourCounter != 3)
 	{
 		fprintf(stderr, "Komorka(%d, %d) nie posiada 3 sasiadow (%d)\n", x, y, neighbourCounter);
+		free(neighbours);
 		return NULL;
 	}
 
@@ -406,7 +408,7 @@ Cell create_cell_with_inherited_colors_8(Matrix* mx, int x, int y, int n, int co
 	newCell.R = add_clamped(mainParent.R, newCell.R);
 	newCell.G = add_clamped(mainParent.G, newCell.G);
 	newCell.B = add_clamped(mainParent.B, newCell.B);
-
+	free(neighbours);
 	//printf("----\n%d %d %d \nmain %d %d %d\nsecond %d %d %d\n", newCell.R, newCell.G, newCell.B, mainParent.R, mainParent.G, mainParent.B, secondParent.R, secondParent.G, secondParent.B);
 	//printf("%d %d %d\n", bitNumbers[0], bitNumbers[1], bitNumbers[2]);
 	return newCell;

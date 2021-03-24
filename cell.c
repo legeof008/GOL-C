@@ -23,6 +23,11 @@ void mx_init(Matrix * mx) // inicjalizuje macierz, na białą planszę martwych 
 	}
 	mx->data = dmx;
 }
+void mx_free(Matrix* mx)
+{
+	free(mx->data);
+	free(mx);
+}
 
 int mx_put_val(Matrix* mx, int r, int c, int num, ...) /* wieloargumentowa funkcja, NIE dawać więcej niż 3 argumenty po num*/
 {
