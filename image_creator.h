@@ -1,6 +1,7 @@
 #ifndef _IMAGE_CREATOR_H_
 #define _IMAGE_CREATOR_H_
 
+#include <png.h>
 #include "cell.h"
 
 int width;
