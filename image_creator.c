@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <png.h>
 
 #define MAX_SCALE 10
 #define WALL_COLOR 0x0000FF // Niebieski
