@@ -1,6 +1,6 @@
 CC=gcc
 OBJECTS= *.c
-CFLAGS=
+CFLAGS= -lpng
 NAME=gol
 gol: $(OBJECTS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJECTS)
