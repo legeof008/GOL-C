@@ -1,6 +1,8 @@
 #ifndef _CELL_MX_H_
 #define _CELL_MX_H_
 
+#include <stdio.h>
+
 #pragma pack(push, 1)
 typedef struct{
 	char type; // 0 - martwa; 1 - żywa; 2 - ściana;
@@ -10,15 +12,10 @@ typedef struct{
 	char neighbor; // miedzy 0 a 8 sąsiadów
 	char padding [3];
 }Cell;
-#pragma pack(pop)
-
-#pragma pack(push, 1)
 typedef struct {
 	
 	Cell* data;
 	int r,c; // wiersze, kolumny
-	char nei,fol; // n - sąsiedztwo, f - zwijanie
-	char padding [2];
 	
 }Matrix;
 #pragma pack(pop)
@@ -27,7 +24,7 @@ Matrix *mx_alloc(int r, int c); // alokuje pamięć na Matrix
 
 Matrix* mx_read_from_file(FILE *f) ; // Czyta z pliku
 
-Cell *mx_get_cell(Matrix *mx, int r, int c); 
+Cell mx_get_cell(Matrix *mx, int r, int c); 
 
 void mx_print(Matrix *mx); // wypisuje jak macierz poglądowo
 
