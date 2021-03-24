@@ -107,12 +107,11 @@ int save_as_bitmap(FILE* file, Matrix* matrix, int scale)
 	return 0;
 }
 
-int write_png_file(char *filename)
+int write_png_file(FILE *fp)
 {
-  FILE *fp = fopen(filename, "wb");
   if (!fp)
   {
-    fprintf(stderr, "[write_png_file] Nie udalo otworzyc sie pliku %s do zapisu\n", filename);
+    fprintf(stderr, "[write_png_file] Nie udalo otworzyc sie pliku do zapisu\n");
     return -1;
   }
 

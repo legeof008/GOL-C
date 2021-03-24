@@ -219,8 +219,8 @@ int main(int argc, char* argv[])
 
 	if (pngOutputFile != NULL)	// Zapis do pliku .png
 	{
-		/*process_png_file(board, scale);
-		write_png_file(pngOutputFile);*/
+		process_png_file(board, scale);
+		write_png_file(pngOutputFile);
 	}
 
 

@@ -13,7 +13,7 @@ png_structp png;
 png_infop info;
 
 // Zapisuje matrix do pliku png
-int write_png_file(char *filename);
+int write_png_file(FILE *fp);
 
 // Przetwarza dana matrix, zwraca 0 gdy przetworzyl poprawnie, -1 gdy skala jest nieprawidlowa
 int process_png_file(Matrix *matrix, int scale);

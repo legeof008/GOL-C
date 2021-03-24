@@ -3,6 +3,6 @@ OBJECTS= *.c
 CFLAGS= -lpng
 NAME=gol
 gol: $(OBJECTS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJECTS)
+	$(CC) -o $(NAME) $(OBJECTS) $(CFLAGS)
 clean:
 	rm $(NAME)
