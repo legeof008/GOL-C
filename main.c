@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
 	//printf("typy\n");
 	//mx_write_types(board);
 
-	char* pat[] = {
+	/*char* pat[] = {
 		"e:/ZZ_GOL/b1.bmp",
 		"e:/ZZ_GOL/b2.bmp",
 		"e:/ZZ_GOL/b3.bmp",
@@ -172,7 +172,7 @@ int main(int argc, char* argv[])
 		"e:/ZZ_GOL/b47.bmp",
 		"e:/ZZ_GOL/b48.bmp",
 		"e:/ZZ_GOL/b49.bmp",
-	};
+	};*/
 	
 	if (neighbourType == 4)		// Tryb 4 sasiadow
 	{
@@ -196,7 +196,7 @@ int main(int argc, char* argv[])
 	{
 		count_neighbours_8(board, fold);					// Liczenie sasiadow dla 0 cyklu
 
-		save_as_bitmap(fopen("e:/ZZ_GOL/b0.bmp", "wb"), board, scale);
+		//save_as_bitmap(fopen("e:/ZZ_GOL/b0.bmp", "wb"), board, scale);
 		//printf("sasiedztwo\n");
 		//mx_write_neighbours(board);
 
@@ -205,7 +205,7 @@ int main(int argc, char* argv[])
 			//printf("%d\n", i);
 			make_a_cycle_rewrite_struct_8(board, nx, board->c - 1, board->r - 1, fold);
 			mx_cpy(nx, board);
-			save_as_bitmap(fopen(pat[i], "wb"), board, scale);
+			//save_as_bitmap(fopen(pat[i], "wb"), board, scale);
 
 /*			printf("%d-------------- typy\n", i);
 			mx_write_types(board);
