@@ -37,9 +37,15 @@ int clamp_index(int v, int s, int connection)
 
 Cell* get_neighbours_4(Matrix* mx, int x, int y, int connection)
 {
-	Cell neighbours[3];
+	Cell* neighbours = malloc(sizeof(Cell) * 3);
 	int neighbourCounter = 0;
 	int nx, ny;
+
+	if (neighbours == NULL)
+	{
+		fprintf(stderr, "Nie udalo sie zarezerwowac pamieci na liste sasiadow");
+		return NULL;
+	}
 
 	ny = clamp_index(y - 1, mx->r, connection);
 	nx = x;
@@ -607,3 +613,4 @@ void make_a_cycle_rewrite_struct_8(Matrix* mx, Matrix* nx, int maxRow, int maxCo
 		}
 	}
 }
+
