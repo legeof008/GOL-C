@@ -118,6 +118,9 @@ int main(int argc, char* argv[])
 
 	// Tworzenie macierzy
 	board = mx_read_from_file(inputFile);		// Czytanie z pliku
+	if(board == NULL)
+		return -1;
+
 	nx = mx_alloc(board->r, board->c);
 	//printf("typy\n");
 	//mx_write_types(board);
@@ -173,7 +176,7 @@ int main(int argc, char* argv[])
 		"e:/ZZ_GOL/b48.bmp",
 		"e:/ZZ_GOL/b49.bmp",
 	};*/
-	
+
 	if (neighbourType == 4)		// Tryb 4 sasiadow
 	{
 		count_neighbours_4(board, fold);					// Liczenie sasiadow dla 0 cyklu
@@ -210,7 +213,7 @@ int main(int argc, char* argv[])
 /*			printf("%d-------------- typy\n", i);
 			mx_write_types(board);
 			printf("sasiedztwo\n");
-			mx_write_neighbours(board);*/	
+			mx_write_neighbours(board);*/
 		}
 	}
 

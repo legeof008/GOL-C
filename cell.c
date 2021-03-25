@@ -5,11 +5,17 @@
 #include "cell.h"
 
 #define CH (char) // nie chce mi sie pisac
+#define MAX_SIZE 100 // TODO: do ustalenia
 
-void mx_init(Matrix * mx) // inicjalizuje macierz, na białą planszę martwych komórek,
+int mx_init(Matrix * mx) // inicjalizuje macierz, na białą planszę martwych komórek,
 {
 	int col = mx->c;
 	Cell* dmx = (Cell*)malloc(mx->r * col * sizeof(Cell));
+	if(dmx == NULL)
+	{
+		fprintf(stderr, "[mx_init] ERROR, nie mozna zaalokowac pamieci na plansze\n");
+		return -1;
+	}
 	for (int i = 0; i < mx->r; i++)
 	{
 		for (int j = 0; j < mx->c; j++)
@@ -22,6 +28,8 @@ void mx_init(Matrix * mx) // inicjalizuje macierz, na białą planszę martwych 
 		}
 	}
 	mx->data = dmx;
+
+	return 0;
 }
 void mx_free(Matrix* mx)
 {
@@ -32,6 +40,11 @@ void mx_free(Matrix* mx)
 int mx_put_val(Matrix* mx, int r, int c, int num, ...) /* wieloargumentowa funkcja, NIE dawać więcej niż 3 argumenty po num*/
 {
 	Cell* dmx = mx->data;
+	if(dmx == NULL)
+	{
+		fprintf(stderr, "[mx_put_val] ERROR, nie udalo sie zaalokowac pamieci na komorke\n");
+		return -1;
+	}
 	va_list ap;
 	va_start(ap, num);
 	if (num == 1) // num = 1 zmiana typu komórki
@@ -65,28 +78,122 @@ Matrix* mx_alloc(int r, int c) // alokuje pamięć na Matrix
 	return A;
 }
 
-Matrix* mx_read_from_file(FILE *f) // Czyta z pliku
+Matrix* mx_read_from_file(FILE *f) // Wczytuje dane z pliku lub ze standardowego wejscia
 {
 	int x, y, type, R, G, B;
 
-	if (f == NULL)
-	{
-		fprintf(stderr, "Error opening file\n");
-		return NULL;
-	}
 	Matrix *A = (Matrix *)malloc(sizeof(Matrix));
 	if (A == NULL)
 	{
-		fprintf(stderr, "Error readin file\n");
+		fprintf(stderr, "[mx_red_from_file]: ERROR, nie mozna zaalokowac pamieci na plansze\n");
 		return NULL;
 	}
-	fscanf(f, "%d %d"/* %d %d"*/, &(A->r), &(A->c)/*, &(A->nei), &(A->fol)*/);
-	mx_init(A);
-	while (fscanf(f, "%d %d %d %d %d %d", &x, &y, &type, &R, &G, &B) == 6)
+
+	if(fscanf(f, "%d", &(A->r)) != 1)
 	{
-		mx_put_val(A, y, x, 1, CH type);
-		mx_put_val(A, y, x, 3, CH R, CH G, CH B);
+		fprintf(stderr, "[mx_red_from_file]: ERROR, nie podano wysokosci planszy\n");
+		return NULL;
 	}
+	if (A->r <= 0 || A->r > MAX_SIZE)
+	{
+		fprintf(stderr, "[mx_red_from_file]: ERROR, Podano nieprawidlowa wysokosc planszy: %d\n"
+		"Wysokosc musi nalezec do przedzialu (0, %d>\n", A->r, MAX_SIZE);
+		return NULL;
+	}
+
+	if(fscanf(f, "%d", &(A->c)) != 1)
+	{
+		fprintf(stderr, "[mx_red_from_file]: ERROR, nie podano szerokosci planszy\n");
+		return NULL;
+	}
+	if (A->c <= 0 || A->c > MAX_SIZE)
+	{
+		fprintf(stderr, "[mx_red_from_file]: ERROR, Podano nieprawidlowa szerokosc planszy: %d\n"
+		"Szerokosc musi nalezec do przedzialu (0, %d>\n", A->c, MAX_SIZE);
+		return NULL;
+	}
+
+	if (mx_init(A) != 0)
+		return NULL;
+
+	while(1)
+	{
+		if (fscanf(f, "%d", &x) != 1)
+			break;
+		if ( x >= A->c || x < 0)
+		{
+			fprintf(stderr, "[mx_red_from_file]: ERROR, Podano nieprawidlowa wspolrzedna x: %d\n"
+			"Wspolrzedna x musi nalezec do przedzialu (0, %d>\n", x, A->c-1);
+			return NULL;
+		}
+
+		if (fscanf(f, "%d", &y) != 1)
+		{
+			fprintf(stderr, "[mx_red_from_file]: ERROR, Po podaniu wspolrzednej x: %d nie podano wspolrzednej y\n", x);
+			return NULL;
+		}
+		if ( y >= A->r || y < 0)
+		{
+			fprintf(stderr, "[mx_red_from_file]: ERROR, Podano nieprawidlowa wspolrzedna y: %d\n"
+			"Wspolrzedna y musi nalezec do przedzialu (0, %d>\n", y, A->r-1);
+			return NULL;
+		}
+
+		if (fscanf(f, "%d", &type) != 1)
+		{
+			fprintf(stderr, "[mx_red_from_file]: ERROR, Po podaniu wspolrzednych nie podano typu\n"
+			"Typ 0 - kom. martwa, 1 - kom. zywa, 2 - sciana\n");
+			return NULL;
+		}
+		if (type < 0 || type > 2)
+		{
+			fprintf(stderr, "[mx_red_from_file]: ERROR, Podano nieprawidlowy typ: %d\n"
+			"Typ 0 - kom. martwa, 1 - kom. zywa, 2 - sciana\n", type);
+			return NULL;
+		}
+
+		if (fscanf(f, "%d", &R) != 1)
+		{
+			fprintf(stderr, "[mx_red_from_file]: ERROR, Po podaniu wspolrzednych i typu nie podano wartosci parametru R\n");
+			return NULL;
+		}
+		if( R < 0 || R > 255)
+		{
+			fprintf(stderr, "[mx_red_from_file]: ERROR, Nieprawidlowa wartosc parametru R: %d\n"
+			"Parametr R musi nalezec do przedzialu <0,255>\n", R);
+			return NULL;
+		}
+
+		if (fscanf(f, "%d", &G) != 1)
+		{
+			fprintf(stderr, "[mx_red_from_file]: ERROR, Po podaniu wspolrzednych i typu nie podano wartosci parametru G\n");
+			return NULL;
+		}
+		if( G < 0 || G > 255)
+		{
+			fprintf(stderr, "[mx_red_from_file]: ERROR, Nieprawidlowa wartosc parametru G: %d\n"
+			"Parametr G musi nalezec do przedzialu <0,255>\n", G);
+			return NULL;
+		}
+
+		if (fscanf(f, "%d", &B) != 1)
+		{
+			fprintf(stderr, "[mx_red_from_file]: ERROR, Po podaniu wspolrzednych i typu nie podano wartosci parametru B\n");
+			return NULL;
+		}
+		if( B < 0 || B > 255)
+		{
+			fprintf(stderr, "[mx_red_from_file]: ERROR, Nieprawidlowa wartosc parametru B: %d\n"
+			"Parametr B musi nalezec do przedzialu <0,255>\n", B);
+			return NULL;
+		}
+
+		if (mx_put_val(A, y, x, 1, CH type) < 0)
+			return NULL;
+		if (mx_put_val(A, y, x, 3, CH R, CH G, CH B) < 0)
+			return NULL;
+	}
+
 	return A;
 }
 
