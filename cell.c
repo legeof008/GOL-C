@@ -5,7 +5,7 @@
 #include "cell.h"
 
 #define CH (char) // nie chce mi sie pisac
-#define MAX_SIZE 100 // TODO: do ustalenia
+#define MAX_SIZE 10 000 // TODO: do ustalenia
 
 int mx_init(Matrix * mx) // inicjalizuje macierz, na białą planszę martwych komórek,
 {
