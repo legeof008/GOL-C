@@ -78,7 +78,7 @@ Matrix* mx_alloc(int r, int c) // alokuje pamięć na Matrix
 		return NULL;
 	else
 		return A;
-	
+
 }
 
 Matrix* mx_read_from_file(FILE *f) // Wczytuje dane z pliku lub ze standardowego wejscia
@@ -195,7 +195,14 @@ Matrix* mx_read_from_file(FILE *f) // Wczytuje dane z pliku lub ze standardowego
 			return NULL;
 	}
 
-	return A;
+	if(feof(f))
+		return A;
+	else
+	{
+		printf("[mx_red_from_file]: ERROR, Smieci w strumieniu wejsciowym\n");
+		return NULL;
+	}
+
 }
 
 void mx_print(Matrix *mx) // wypisuje jak macierz poglądowo
@@ -260,7 +267,7 @@ void mx_cpy(Matrix *src, Matrix *dest) //Kopiowanie macierzy z zerowaniem src
 	{
 		for (int j = 0; j < src->c; j++)
 		{
-			
+
 			(destd + i * col + j)->R = (srcd + i * col + j)->R;
 			(destd + i * col + j)->G = (srcd + i * col + j)->G;
 			(destd + i * col + j)->B = (srcd + i * col + j)->B;
