@@ -119,7 +119,7 @@ Matrix* mx_read_from_file(FILE *f) // Wczytuje dane z pliku lub ze standardowego
 	if (mx_init(A) != 0)
 		return NULL;
 
-	while(fscanf(f, "%d", &x) != 1)
+	while(fscanf(f, "%d", &x) == 1)
 	{
 		if ( x >= A->c || x < 0)
 		{
