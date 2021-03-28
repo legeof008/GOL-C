@@ -187,6 +187,7 @@ int main(int argc, char* argv[])
 
 		for (int i = 0; i < numberOfCycles; i++)
 		{
+			
 			make_a_cycle_rewrite_struct_4(board, nx, board->c - 1, board->r - 1, fold);
 			mx_cpy(nx, board);
 			//printf("%d  typy\n", i);
@@ -216,17 +217,24 @@ int main(int argc, char* argv[])
 			mx_write_neighbours(board);*/
 		}
 	}
-
 	if (bmpOutputFile != NULL)	// Zapis do pliku .bmp
+	{
 		save_as_bitmap(bmpOutputFile, board, scale);
+		mx_free(board);
+		mx_free(nx);
+		
+	}
 
 	if (pngOutputFile != NULL)	// Zapis do pliku .png
 	{
+		
 		process_png_file(board, scale);
 		write_png_file(pngOutputFile);
+		mx_free(board);
+		mx_free(nx);
+		
 	}
-	mx_free(nx);
-	mx_free(board);
+	
 
 	// HACK: Tylko potrzebne mi do odpalania programu w VS
 	//getchar();

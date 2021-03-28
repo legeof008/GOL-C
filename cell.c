@@ -74,8 +74,9 @@ Matrix* mx_alloc(int r, int c) // alokuje pamięć na Matrix
 	Matrix* A = (Matrix*)malloc(sizeof(Matrix));
 	A->c = c;
 	A->r = r;
-	mx_init(A);
+	int d = mx_init(A);
 	return A;
+	
 }
 
 Matrix* mx_read_from_file(FILE *f) // Wczytuje dane z pliku lub ze standardowego wejscia
@@ -255,10 +256,22 @@ void mx_cpy(Matrix *src, Matrix *dest) //Kopiowanie macierzy z zerowaniem src
 	Cell *srcd = src->data;
 	Cell *destd = dest->data;
 
-	for (int i = 0; i < src->c; i++)
+	for (int i = 0; i < src->r; i++)
 	{
 		for (int j = 0; j < src->c; j++)
 		{
+			/*
+			((dest->data) + i* col+j)->R = ((src->data)+i*col+j)->R;
+			((dest->data) + i* col+j)->R = ((src->data)+i*col+j)->G;
+			((dest->data) + i* col+j)->R = ((src->data)+i*col+j)->B;
+			((dest->data) + i* col+j)->type = ((src->data)+i*col+j)->type;
+			((dest->data) + i* col+j)->neighbor = ((src->data)+i*col+j)->neighbor;
+			((src->data)+i*col+j)->type = CH 0x00;
+			((src->data)+i*col+j)->R = CH 0x00;
+			((src->data)+i*col+j)->G = CH 0x00;
+			((src->data)+i*col+j)->B = CH 0x00;
+			((src->data)+i*col+j)->neighbor = CH 0x00;*/
+
 			(destd + i * col + j)->R = (srcd + i * col + j)->R;
 			(destd + i * col + j)->G = (srcd + i * col + j)->G;
 			(destd + i * col + j)->B = (srcd + i * col + j)->B;
@@ -271,4 +284,6 @@ void mx_cpy(Matrix *src, Matrix *dest) //Kopiowanie macierzy z zerowaniem src
 			(srcd + i * col + j)->neighbor = CH 0x00;
 		}
 	}
+	src->data = srcd;
+	dest->data = destd;
 }
