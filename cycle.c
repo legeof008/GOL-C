@@ -588,9 +588,9 @@ void make_a_cycle_rewrite_struct_8(Matrix* mx, Matrix* nx, int maxRow, int maxCo
 	int i;
 	int j;
 
-	for (i = 0; i <= maxRow; i++)
+	for (i = 0; i <= maxColumn; i++)
 	{
-		for (j = 0; j <= maxColumn; j++)
+		for (j = 0; j <= maxRow; j++)
 		{
 			if ((dmx + i * mx->c + j)->type == 2)		// sciana
 			{
