@@ -1,6 +1,5 @@
 #ifndef _CYCLE_H_
 #define _CYCLE_H_
-
 #include "cell.h"
 
 void count_neighbours_4(Matrix* mx, int connection);

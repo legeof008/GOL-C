@@ -2,7 +2,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
-#include "cell.h"
+#include "headers/cell.h"
 
 #define CH (char) // nie chce mi sie pisac
 #define MAX_SIZE 10000 // TODO: do ustalenia

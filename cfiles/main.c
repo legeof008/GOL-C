@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "cell.h"
-#include "cycle.h"
-#include "image_creator.h"
+#include "headers/cell.h"
+#include "headers/cycle.h"
+#include "headers/image_creator.h"
 
 #include <unistd.h>
 

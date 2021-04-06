@@ -1,4 +1,4 @@
-#include "image_creator.h"
+#include "headers/image_creator.h"
 
 #include <stdio.h>
 #include <stdlib.h>

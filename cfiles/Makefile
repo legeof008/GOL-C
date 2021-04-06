@@ -1,8 +1,10 @@
 CC=gcc
+INC_DIR = ../
 OBJECTS= *.c
-CFLAGS= 
+CFLAGS= -fcommon
 NAME=GoL
 GoL: $(OBJECTS)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJECTS) -lpng
+	mv $(NAME) ../
 clean:
 	rm $(NAME)

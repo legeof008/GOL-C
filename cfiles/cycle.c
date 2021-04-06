@@ -1,8 +1,7 @@
-#include "cycle.h"
-
+#include "headers/cycle.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "cell.h"
+#include "headers/cell.h"
 
 #pragma warning(disable:4700)
 
