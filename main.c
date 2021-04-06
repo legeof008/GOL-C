@@ -8,7 +8,7 @@
 
 #include <unistd.h>
 
-#define DEFAULT_NUMBER_OF_CYCLES 1
+#define DEFAULT_NUMBER_OF_CYCLES 10
 #define DEFAULT_NEIGBOUR_TYPE 8
 #define DEFAULT_OUTPUT_SCALE 1
 
