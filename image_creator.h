@@ -19,6 +19,6 @@ int write_png_file(FILE *fp);
 void process_png_file(Matrix *matrix, int scale);
 
 // Zapisuje matrix do pliku w postaci bitmapy; zwraca 0, gdy udalo sie zapisac obraz; zwraca -1, gdy nie udalo sie zapisac obrazu
-int save_as_bitmap(FILE* file, Matrix *matrix, int scale);
+void save_as_bitmap(FILE* file, Matrix *matrix, int scale);
 
 #endif // _IMAGE_CREATOR_H_
