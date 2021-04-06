@@ -47,7 +47,7 @@ void write_info_header_to_bitmap(FILE* image, int imageWidth, int imageHeight)
 	fwrite(&b, 4, 1, image);    // Liczba "waznych" kolorow (nie jest wazne -> powinno byc 0)
 }
 
-int save_as_bitmap(FILE* file, Matrix* matrix, int scale)
+void save_as_bitmap(FILE* file, Matrix* matrix, int scale)
 {
 	int sw, sh;
 	int b;
@@ -97,8 +97,6 @@ int save_as_bitmap(FILE* file, Matrix* matrix, int scale)
 	}
 
 	fclose(file);	// TODO: Nwm czy powinno zamykac sie tu strumien
-
-	return 0;
 }
 
 int write_png_file(FILE *fp)
