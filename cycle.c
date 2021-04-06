@@ -1,4 +1,4 @@
-##include "cycle.h"
+#include "cycle.h"
 
 #include <stdio.h>
 #include <stdlib.h>
