@@ -53,12 +53,6 @@ int save_as_bitmap(FILE* file, Matrix* matrix, int scale)
 	int b;
 	int i, si, j, sj;
 
-	if (scale > MAX_SCALE || scale < 1)
-	{
-		fprintf(stderr, "Nie mozna utworzyc obrazu (podana skala jest zla. Powinna miescic sie w (1, %d))", MAX_SCALE);
-		return -1;
-	}
-
 	sw = scale * matrix->c;
 	sh = scale * matrix->r;
 
@@ -180,12 +174,6 @@ int write_png_file(FILE *fp)
 
 int process_png_file(Matrix *matrix, int scale)
 {
-  if (scale > MAX_SCALE || scale < 1)
-  {
-    fprintf(stderr, "Nie mozna utworzyc obrazu (podana skala jest zla. Powinna miescic sie w (1, %d))\n", MAX_SCALE);
-    return -1;
-  }
-
   width = scale * matrix->c;
   height = scale * matrix->r;
   bitDepth = 8;
