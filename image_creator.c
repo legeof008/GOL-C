@@ -172,7 +172,7 @@ int write_png_file(FILE *fp)
 }
 
 
-int process_png_file(Matrix *matrix, int scale)
+void process_png_file(Matrix *matrix, int scale)
 {
   width = scale * matrix->c;
   height = scale * matrix->r;
@@ -216,5 +216,4 @@ int process_png_file(Matrix *matrix, int scale)
       }
     }
   }
-  return 0;
 }
