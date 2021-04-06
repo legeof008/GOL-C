@@ -180,7 +180,7 @@ int write_png_file(FILE *fp)
 
 int process_png_file(Matrix *matrix, int scale)
 {
-  if (scale >= MAX_SCALE || scale < 1)
+  if (scale > MAX_SCALE || scale < 1)
   {
     fprintf(stderr, "Nie mozna utworzyc obrazu (podana skala jest zla. Powinna miescic sie w (1, %d))\n", MAX_SCALE);
     return -1;
