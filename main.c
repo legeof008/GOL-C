@@ -6,11 +6,7 @@
 #include "cycle.h"
 #include "image_creator.h"
 
-#if defined(_MSC_VER)
-#include "getopt.h"
-#elif defined(__GNUC__)
 #include <unistd.h>
-#endif
 
 #define DEFAULT_NUMBER_OF_CYCLES 1
 #define DEFAULT_NEIGBOUR_TYPE 8
