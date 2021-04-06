@@ -182,7 +182,7 @@ int process_png_file(Matrix *matrix, int scale)
   rowPointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
   for (int y = 0; y < height; y++)
   {
-    rowPointers[y] = (png_byte*)malloc(sizeof(png_byte) * width * 3); // SPRAWDZIC: ile tu trzeba wpisac? wczesniej bylo: png_get_rowbytes(png,info));
+    rowPointers[y] = (png_byte*)malloc(sizeof(png_byte) * width * 3);
   }
 
   for (unsigned int y = 0; y < matrix->r; y++)
